@@ -3,4 +3,4 @@
 [![CircleCI](https://circleci.com/gh/bokuweb/gopher-boy/tree/master.svg?style=svg)](https://circleci.com/gh/bokuweb/gopher-boy/tree/master)
 
 
-<img src="screenshot/mario.png" style="margin-right: 32px;"><img src="screenshot/tetris.png" style="margin-right: 32px;"><img src="screenshot/drmario.png">
+<span style="margin-right: 32px;"><img src="screenshot/mario.png"></span><img src="screenshot/tetris.png"><img src="screenshot/drmario.png">
