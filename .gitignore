@@ -1,0 +1,4 @@
+reg.json
+logs/*.log
+*.sym
+logs

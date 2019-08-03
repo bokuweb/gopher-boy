@@ -1,0 +1,26 @@
+defaults: &defaults
+  working_directory: ~/gopher-boy
+  docker:
+    - image: bokuweb/node-go-with-browser:latest
+      environment:
+        TZ: Asia/Tokyo
+        GOPATH: /home/circleci/go
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: apt-get install -yq xorg-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libopenal-dev libasound2-dev libgl1-mesa-dev
+      - run:
+          name: Install reg
+          command: npm i -g reg-cli
+      - run:
+          name: Test
+          command: |
+            make -B test
+      - run:
+          name: Reg
+          command: reg-cli ./test/actual ./test/expect ./test/diff
