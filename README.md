@@ -24,11 +24,11 @@ gopher-boy YOUR_GAMEBOY_ROM.gb
 
 ### Keymap
 
-<kbd>&larr;</kbd> - &larr; button
-<kbd>&uarr;</kbd> - &uarr; button
-<kbd>&darr;</kbd> - &darr; button
-<kbd>&rarr;</kbd> - &rarr; button
-<kbd>Z</kbd> - A button
-<kbd>X</kbd> - B button
-<kbd>Enter</kbd> - Start button
-<kbd>Backspace</kbd> - Select button
+<kbd>&larr;</kbd> - &larr; button   
+<kbd>&uarr;</kbd> - &uarr; button   
+<kbd>&darr;</kbd> - &darr; button   
+<kbd>&rarr;</kbd> - &rarr; button   
+<kbd>Z</kbd> - A button   
+<kbd>X</kbd> - B button   
+<kbd>Enter</kbd> - Start button   
+<kbd>Backspace</kbd> - Select button   
