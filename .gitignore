@@ -2,3 +2,5 @@ reg.json
 logs/*.log
 *.sym
 logs
+public/main.wasm
+gopher-boy

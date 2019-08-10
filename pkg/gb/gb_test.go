@@ -73,7 +73,7 @@ func set(img *image.RGBA, imageData types.ImageData) {
 func skipFrame(emu *GB, n int) types.ImageData {
 	var image types.ImageData
 	for i := 0; i < n; i++ {
-		image = emu.next()
+		image = emu.Next()
 	}
 	return image
 }

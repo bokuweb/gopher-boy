@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Testing WebAssembly</title>
+    <script src="wasm_exec.js"></script>
+    <script type="text/javascript">
+      function fetchAndInstantiate(url, importObject) {
+        return fetch(url)
+          .then(response => response.arrayBuffer())
+          .then(bytes => WebAssembly.instantiate(bytes, importObject))
+          .then(results => results.instance);
+      }
+      const go = new Go();
+      window.onload = async () => {
+        const canvas = document.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+        const image = ctx.createImageData(160, 144);
+
+        const ins = await fetchAndInstantiate("/main.wasm", go.importObject);
+        go.run(ins);
+        const rom = await fetch("./opus5.gb");
+        const buf = await rom.arrayBuffer();
+        const gb = new GB(new Uint8Array(buf));
+
+        const frame = () => {
+          const img = gb.next();
+          image.data.set(img);
+          ctx.putImageData(image, 0, 0);
+          window.requestAnimationFrame(frame);
+        };
+        frame();
+      };
+    </script>
+    <style>
+      body {
+        background: #1abc9c;
+      }
+      #gameboy {
+        position: relative;
+        top: 50px;
+        margin: 0px auto;
+        height: 500px;
+        width: 300px;
+        background: #eee;
+        border-radius: 10px 10px 30px 10px;
+        overflow: hidden;
+        box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+        /*cursor: pointer*/
+      }
+      #gameboy:before {
+        position: absolute;
+        width: 500px;
+        height: 20px;
+        border-bottom: 3px solid #e0e0e0;
+        content: "";
+      }
+      #gameboy:after {
+        position: absolute;
+        width: 240px;
+        height: 20px;
+        left: 24px;
+        border-left: 3px solid #e0e0e0;
+        border-right: 3px solid #e0e0e0;
+        content: "";
+      }
+      #screen {
+        position: absolute;
+        width: 252px;
+        height: 210px;
+        left: 14px;
+        top: 40px;
+        background: #777;
+        border-radius: 5px 5px 20px 5px;
+      }
+      #screen:before {
+        position: absolute;
+        width: 160px;
+        height: 144px;
+        top: 26px;
+        left: 46px;
+        background-size: 80%;
+        background-color: #ae9b32;
+        box-shadow: inset 2px 2px rgba(0, 0, 0, 0.1);
+        content: "";
+        transition: all 2s;
+      }
+      #light {
+        position: relative;
+        margin: 0px auto;
+        height: 10px;
+        width: 10px;
+        top: -284px;
+        left: -104px;
+        border-radius: 100%;
+        box-shadow: 1px 1px 0 #400 inset;
+        background: #600;
+        content: "";
+      }
+
+      #gameboy:hover ~ #light {
+        background: #f00;
+      }
+      #text em {
+        font-weight: normal;
+      }
+      #dpad {
+        position: absolute;
+        width: 26px;
+        height: 80px;
+        top: 300px;
+        left: 50px;
+        background: #444;
+        border-radius: 3px;
+        z-index: 998;
+      }
+      #dpad:after {
+        position: absolute;
+        width: 80px;
+        height: 26px;
+        top: 26px;
+        left: -26px;
+        background: #444;
+        border-radius: 3px;
+        content: "";
+        z-index: 999;
+      }
+      #dpad:before {
+        position: absolute;
+        height: 13px;
+        width: 13px;
+        top: 13px;
+        border-radius: 100%;
+        background: #333;
+        content: "";
+        z-index: 1000;
+      }
+      #bevel {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        top: 290px;
+        left: 14px;
+        background: #dfdfdf;
+        border-radius: 100%;
+      }
+      #bevel:before {
+        position: absolute;
+        width: 50px;
+        height: 100px;
+        left: 200px;
+        background: #dfdfdf;
+        border-radius: 12px;
+        -webkit-transform: rotate(45deg);
+        content: "";
+      }
+      #bevel:after {
+        position: absolute;
+        height: 40px;
+        width: 6px;
+        top: 160px;
+        left: 200px;
+        border-radius: 2px;
+        background: #ddd;
+        -webkit-transform: rotate(-45deg);
+        box-shadow: 7px 0px #ddd, 14px 0px #ddd, 21px 0px #ddd, 28px 0px #ddd,
+          35px 0px #ddd;
+        content: "";
+      }
+      #bt1 {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        top: 340px;
+        right: 62px;
+        border-radius: 100%;
+        background: #a93671;
+        box-shadow: 18px -18px #a93671;
+      }
+      #bt2 {
+        position: absolute;
+        height: 50px;
+        width: 12px;
+        bottom: 50px;
+        left: 110px;
+        background: #999;
+        border-radius: 3px;
+        -webkit-transform: rotate(45deg);
+        box-shadow: 17px -17px #999;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas width="160" height="144"></canvas>
+    <div class="a">
+      <div id="gameboy">
+        <div id="screen"></div>
+        <div id="dpad"></div>
+        <div id="bevel"></div>
+        <div id="bt1"></div>
+        <div id="bt2"></div>
+      </div>
+      <div id="light"></div>
+    </div>
+  </body>
+</html>
