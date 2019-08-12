@@ -329,7 +329,7 @@ func (g *GPU) buildSprites() {
 				}
 				if paletteID != 0 {
 					rgba := g.getPalette(c)
-					base := (uint(offsetY+adjustedY)*constants.ScreenWidth+uint(adjustedX+offsetX))*4
+					base := (uint(offsetY+adjustedY)*constants.ScreenWidth + uint(adjustedX+offsetX)) * 4
 					g.imageData[base] = rgba.R
 					g.imageData[base+1] = rgba.G
 					g.imageData[base+2] = rgba.B
@@ -347,11 +347,11 @@ func (g *GPU) buildBGTile() {
 		tileID = g.getTileID(tileY, uint(x+int(g.scrollX))/8%32, g.getBGTilemapAddr())
 		paletteID := g.getBGPaletteID(tileID, int(g.scrollX%8)+x, (g.ly+uint(g.scrollY))%8)
 		rgba := g.getBGPalette(uint(paletteID))
-		base := ((g.ly)*constants.ScreenWidth+uint(x))*4
+		base := ((g.ly)*constants.ScreenWidth + uint(x)) * 4
 		g.imageData[base] = rgba.R
 		g.imageData[base+1] = rgba.G
 		g.imageData[base+2] = rgba.B
-		g.imageData[base+3] = rgba.A		
+		g.imageData[base+3] = rgba.A
 	}
 }
 
@@ -371,14 +371,14 @@ func (g *GPU) buildWindowTile() {
 		tileY := (g.ly - uint(g.windowY)) / 8 * 32
 		tileID = g.getTileID(tileY, uint(x-int(offsetX))/8, g.getWindowTilemapAddr())
 		paletteID := g.getBGPaletteID(tileID, int(x-int(offsetX)), (g.ly-uint(g.windowY))%8)
-		
+
 		rgba := g.getBGPalette(uint(paletteID))
-		base := ((g.ly)*constants.ScreenWidth+uint(x))*4
+		base := ((g.ly)*constants.ScreenWidth + uint(x)) * 4
 		g.imageData[base] = rgba.R
 		g.imageData[base+1] = rgba.G
 		g.imageData[base+2] = rgba.B
-		g.imageData[base+3] = rgba.A		
- 	}
+		g.imageData[base+3] = rgba.A
+	}
 }
 
 func (g *GPU) tileData0Selected() bool {

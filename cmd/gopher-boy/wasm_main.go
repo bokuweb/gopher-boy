@@ -7,15 +7,15 @@ import (
 	// "image/color"
 	"log"
 	"syscall/js"
- 
+
 	"github.com/bokuweb/gopher-boy/pkg/interrupt"
 	"github.com/bokuweb/gopher-boy/pkg/logger"
 	"github.com/bokuweb/gopher-boy/pkg/pad"
 	"github.com/bokuweb/gopher-boy/pkg/window"
- 
+
 	"github.com/bokuweb/gopher-boy/pkg/gpu"
 	"github.com/bokuweb/gopher-boy/pkg/timer"
- 
+
 	"github.com/bokuweb/gopher-boy/pkg/cpu"
 	"github.com/bokuweb/gopher-boy/pkg/gb"
 	"github.com/bokuweb/gopher-boy/pkg/ram"
@@ -50,21 +50,22 @@ func newGB(this js.Value, args []js.Value) interface{} {
 
 	this.Set("next", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		img := emu.Next()
-		// buf := []byte{}
-		// for _, color := range img {
-		// 	buf = append(buf, color.R)
-		// 	buf = append(buf, color.G)
-		// 	buf = append(buf, color.B)
-		// 	buf = append(buf, 255)
-		// }
 		return js.TypedArrayOf(img)
+	}))
+	this.Set("keyDown", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		win.KeyDown(byte(args[0].Int()))
+		return nil
+	}))
+	this.Set("keyUp", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		win.KeyUp(byte(args[0].Int()))
+		return nil
 	}))
 	return this
 }
 
 func main() {
-	 w := js.Global()
+	w := js.Global()
 
-	 w.Set("GB", js.FuncOf(newGB))
-	 select {}
+	w.Set("GB", js.FuncOf(newGB))
+	select {}
 }

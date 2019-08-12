@@ -1,15 +1,15 @@
 package gb
 
 import (
-	"time"
 	"image/color"
+	"time"
 
+	"github.com/bokuweb/gopher-boy/pkg/constants"
 	"github.com/bokuweb/gopher-boy/pkg/cpu"
 	"github.com/bokuweb/gopher-boy/pkg/gpu"
 	"github.com/bokuweb/gopher-boy/pkg/interfaces/window"
 	"github.com/bokuweb/gopher-boy/pkg/interrupt"
 	"github.com/bokuweb/gopher-boy/pkg/timer"
-	"github.com/bokuweb/gopher-boy/pkg/constants"
 )
 
 // CyclesPerFrame is cpu clock num for 1frame.
@@ -46,11 +46,11 @@ func (g *GB) Start() {
 			buf := g.Next()
 			imgData := make([]color.RGBA, constants.ScreenWidth*constants.ScreenHeight)
 			i := 0
-			for i * 4 < len(buf) {
-				y := constants.ScreenHeight-(i/constants.ScreenWidth)-1
+			for i*4 < len(buf) {
+				y := constants.ScreenHeight - (i / constants.ScreenWidth) - 1
 				imgData[y*constants.ScreenWidth+i%constants.ScreenWidth] = color.RGBA{buf[i*4], buf[i*4+1], buf[i*4+2], buf[i*4+3]}
 				i++
-			} 
+			}
 			g.win.Render(imgData)
 		}
 	}

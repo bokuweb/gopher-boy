@@ -21,7 +21,6 @@ type Window struct {
 	pad   *pad.Pad
 }
 
-
 // Render renders the pixels on the window.
 func (w *Window) Render(imageData types.ImageData) {
 	w.image.Pix = imageData
@@ -84,6 +83,14 @@ func (w *Window) PollKey() {
 			w.pad.Release(button)
 		}
 	}
+}
+
+func (w *Window) KeyDown(button byte) {
+	/* NOP */
+}
+
+func (w *Window) KeyUp(button byte) {
+	/* NOP */
 }
 
 var keyMap = map[pixelgl.Button]pad.Button{

@@ -18,7 +18,7 @@
 
         const ins = await fetchAndInstantiate("/main.wasm", go.importObject);
         go.run(ins);
-        const rom = await fetch("./opus5.gb");
+        const rom = await fetch("./SML.gb");
         const buf = await rom.arrayBuffer();
         const gb = new GB(new Uint8Array(buf));
 
@@ -29,32 +29,76 @@
           window.requestAnimationFrame(frame);
         };
         frame();
+
+        window.addEventListener("keydown", e => {
+          switch (e.keyCode) {
+            case 90:
+              return gb.keyDown(0x01);
+            case 88:
+              return gb.keyDown(0x02);
+            case 8:
+              return gb.keyDown(0x04);
+            case 13:
+              return gb.keyDown(0x08);
+            case 37:
+              return gb.keyDown(0x20);
+            case 38:
+              return gb.keyDown(0x40);
+            case 39:
+              return gb.keyDown(0x10);
+            case 40:
+              return gb.keyDown(0x80);
+          }
+        });
+
+        window.addEventListener("keyup", e => {
+          switch (e.keyCode) {
+            case 90:
+              return gb.keyUp(0x01);
+            case 88:
+              return gb.keyUp(0x02);
+            case 8:
+              return gb.keyUp(0x04);
+            case 13:
+              return gb.keyUp(0x08);
+            case 37:
+              return gb.keyUp(0x20);
+            case 38:
+              return gb.keyUp(0x40);
+            case 39:
+              return gb.keyUp(0x10);
+            case 40:
+              return gb.keyUp(0x80);
+          }
+        });
       };
     </script>
     <style>
       body {
         background: #1abc9c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
-      #gameboy {
-        position: relative;
-        top: 50px;
-        margin: 0px auto;
-        height: 500px;
+      .gameboy {
+        height: 480px;
         width: 300px;
+        position: relative;
         background: #eee;
-        border-radius: 10px 10px 30px 10px;
+        border-radius: 10px 10px 50px 10px;
         overflow: hidden;
         box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
         /*cursor: pointer*/
       }
-      #gameboy:before {
+      .gameboy:before {
         position: absolute;
         width: 500px;
         height: 20px;
         border-bottom: 3px solid #e0e0e0;
         content: "";
       }
-      #gameboy:after {
+      .gameboy:after {
         position: absolute;
         width: 240px;
         height: 20px;
@@ -63,57 +107,44 @@
         border-right: 3px solid #e0e0e0;
         content: "";
       }
-      #screen {
+      .screen {
         position: absolute;
         width: 252px;
-        height: 210px;
-        left: 14px;
+        height: 188px;
+        left: 24px;
         top: 40px;
         background: #777;
-        border-radius: 5px 5px 20px 5px;
+        border-radius: 5px 5px 40px 5px;
       }
-      #screen:before {
+      canvas {
+        background: #aec5a0;
         position: absolute;
-        width: 160px;
-        height: 144px;
-        top: 26px;
-        left: 46px;
-        background-size: 80%;
-        background-color: #ae9b32;
-        box-shadow: inset 2px 2px rgba(0, 0, 0, 0.1);
-        content: "";
-        transition: all 2s;
+        top: 22px;
+        left: 48px;
       }
-      #light {
-        position: relative;
-        margin: 0px auto;
-        height: 10px;
-        width: 10px;
-        top: -284px;
-        left: -104px;
+      .led {
+        position: absolute;
+        height: 8px;
+        width: 8px;
+        top: 107px;
+        left: 42px;
         border-radius: 100%;
         box-shadow: 1px 1px 0 #400 inset;
         background: #600;
         content: "";
       }
 
-      #gameboy:hover ~ #light {
-        background: #f00;
-      }
-      #text em {
-        font-weight: normal;
-      }
-      #dpad {
+      .pad {
         position: absolute;
         width: 26px;
         height: 80px;
-        top: 300px;
+        top: 296px;
         left: 50px;
         background: #444;
         border-radius: 3px;
         z-index: 998;
       }
-      #dpad:after {
+      .pad:after {
         position: absolute;
         width: 80px;
         height: 26px;
@@ -124,82 +155,62 @@
         content: "";
         z-index: 999;
       }
-      #dpad:before {
+      .pad:before {
         position: absolute;
-        height: 13px;
-        width: 13px;
-        top: 13px;
+        height: 26px;
+        width: 26px;
+        top: 26px;
         border-radius: 100%;
         background: #333;
         content: "";
         z-index: 1000;
       }
-      #bevel {
+      .hole {
         position: absolute;
-        width: 100px;
-        height: 100px;
-        top: 290px;
-        left: 14px;
-        background: #dfdfdf;
-        border-radius: 100%;
-      }
-      #bevel:before {
-        position: absolute;
-        width: 50px;
-        height: 100px;
-        left: 200px;
-        background: #dfdfdf;
-        border-radius: 12px;
-        -webkit-transform: rotate(45deg);
-        content: "";
-      }
-      #bevel:after {
-        position: absolute;
-        height: 40px;
+        height: 46px;
         width: 6px;
-        top: 160px;
-        left: 200px;
+        top: 436px;
+        left: 190px;
         border-radius: 2px;
         background: #ddd;
-        -webkit-transform: rotate(-45deg);
-        box-shadow: 7px 0px #ddd, 14px 0px #ddd, 21px 0px #ddd, 28px 0px #ddd,
-          35px 0px #ddd;
+        -webkit-transform: rotate(-30deg);
+        box-shadow: 0px 0px #ddd, 17px 0px #ddd, 34px 0px #ddd, 51px 0px #ddd,
+          68px 0px #ddd, 85px 0px #ddd;
         content: "";
       }
-      #bt1 {
+      .buttona {
         position: absolute;
         width: 36px;
         height: 36px;
-        top: 340px;
-        right: 62px;
+        top: 322px;
+        right: 69px;
         border-radius: 100%;
         background: #a93671;
-        box-shadow: 18px -18px #a93671;
+        box-shadow: 46px -22px #a93671;
       }
-      #bt2 {
+      .buttonb {
         position: absolute;
-        height: 50px;
+        height: 40px;
         width: 12px;
-        bottom: 50px;
-        left: 110px;
+        bottom: 52px;
+        left: 102px;
         background: #999;
-        border-radius: 3px;
-        -webkit-transform: rotate(45deg);
-        box-shadow: 17px -17px #999;
+        border-radius: 10px;
+        -webkit-transform: rotate(63deg);
+        box-shadow: 20px -50px #999;
       }
     </style>
   </head>
   <body>
-    <canvas width="160" height="144"></canvas>
-    <div class="a">
-      <div id="gameboy">
-        <div id="screen"></div>
-        <div id="dpad"></div>
-        <div id="bevel"></div>
-        <div id="bt1"></div>
-        <div id="bt2"></div>
+    <div class="gameboy">
+      <div class="screen">
+        <canvas width="160" height="144"></canvas>
       </div>
-      <div id="light"></div>
+      <div class="pad"></div>
+      <div class="hole"></div>
+      <div class="buttona"></div>
+      <div class="buttonb"></div>
+      <div class="led"></div>
     </div>
   </body>
 </html>

@@ -4,3 +4,4 @@ logs/*.log
 logs
 public/main.wasm
 gopher-boy
+public/*.gb
