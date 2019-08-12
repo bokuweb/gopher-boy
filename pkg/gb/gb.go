@@ -1,10 +1,8 @@
 package gb
 
 import (
-	"image/color"
 	"time"
 
-	"github.com/bokuweb/gopher-boy/pkg/constants"
 	"github.com/bokuweb/gopher-boy/pkg/cpu"
 	"github.com/bokuweb/gopher-boy/pkg/gpu"
 	"github.com/bokuweb/gopher-boy/pkg/interfaces/window"
@@ -44,14 +42,7 @@ func (g *GB) Start() {
 		select {
 		case <-t.C:
 			buf := g.Next()
-			imgData := make([]color.RGBA, constants.ScreenWidth*constants.ScreenHeight)
-			i := 0
-			for i*4 < len(buf) {
-				y := constants.ScreenHeight - (i / constants.ScreenWidth) - 1
-				imgData[y*constants.ScreenWidth+i%constants.ScreenWidth] = color.RGBA{buf[i*4], buf[i*4+1], buf[i*4+2], buf[i*4+3]}
-				i++
-			}
-			g.win.Render(imgData)
+			g.win.Render(buf)
 		}
 	}
 	t.Stop()

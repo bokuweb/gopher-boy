@@ -4,7 +4,6 @@ package window
 
 import (
 	"github.com/bokuweb/gopher-boy/pkg/pad"
-	"github.com/bokuweb/gopher-boy/pkg/types"
 )
 
 // Window is
@@ -14,7 +13,7 @@ type Window struct {
 }
 
 // Render renders the pixels on the window.
-func (w *Window) Render(imageData types.ImageData) {
+func (w *Window) Render(imageData []byte) {
 	/* NOP */
 }
 
