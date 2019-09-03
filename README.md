@@ -87,7 +87,7 @@ PR welcome :)
 
 - [ ] Implement APU
 - [ ] Support scale option
-- [ ] Support WebAssembly
+- [x] Support WebAssembly
 - [ ] 8\*16 sprite
 - [ ] LCD interrupt
 - [ ] Keypad interrupt
