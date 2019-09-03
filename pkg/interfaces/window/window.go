@@ -1,10 +1,10 @@
 package window
 
-import "github.com/bokuweb/gopher-boy/pkg/types"
-
 // Window is
 type Window interface {
-	Render(imageData types.ImageData)
+	Render(imageData []byte)
 	Run(run func())
 	PollKey()
+	KeyDown(button byte)
+	KeyUp(button byte)
 }

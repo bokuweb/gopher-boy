@@ -8,7 +8,6 @@ import (
 	"github.com/bokuweb/gopher-boy/pkg/interfaces/window"
 	"github.com/bokuweb/gopher-boy/pkg/interrupt"
 	"github.com/bokuweb/gopher-boy/pkg/timer"
-	"github.com/bokuweb/gopher-boy/pkg/types"
 )
 
 // CyclesPerFrame is cpu clock num for 1frame.
@@ -42,12 +41,13 @@ func (g *GB) Start() {
 	for {
 		select {
 		case <-t.C:
-			g.win.Render(g.next())
+			buf := g.Next()
+			g.win.Render(buf)
 		}
 	}
 	t.Stop()
 }
-func (g *GB) next() types.ImageData {
+func (g *GB) Next() []byte {
 	for {
 		var cycles uint
 		if g.gpu.DMAStarted() {

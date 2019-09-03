@@ -22,7 +22,7 @@ const spriteNum = 40
 type GPU struct {
 	bus             bus.Accessor
 	irq             interrupt.Interrupt
-	imageData       types.ImageData
+	imageData       []byte
 	mode            GPUMode
 	clock           uint
 	lcdc            byte
@@ -104,7 +104,7 @@ const (
 // NewGPU is GPU constructor
 func NewGPU() *GPU {
 	return &GPU{
-		imageData:       make([]color.RGBA, constants.ScreenWidth*constants.ScreenHeight),
+		imageData:       make([]byte, constants.ScreenWidth*constants.ScreenHeight*4),
 		mode:            HBlankMode,
 		clock:           0,
 		lcdc:            0x91,
@@ -278,7 +278,7 @@ func (g *GPU) Write(addr types.Word, data byte) {
 }
 
 // GetImageData is image data getter
-func (g *GPU) GetImageData() types.ImageData {
+func (g *GPU) GetImageData() []byte {
 	return g.imageData
 }
 
@@ -328,7 +328,12 @@ func (g *GPU) buildSprites() {
 					c = (g.objPalette0 >> (paletteID * 2)) & 0x03
 				}
 				if paletteID != 0 {
-					g.imageData[(constants.ScreenHeight-1-uint(offsetY+adjustedY))*constants.ScreenWidth+uint(adjustedX+offsetX)] = g.getPalette(c)
+					rgba := g.getPalette(c)
+					base := (uint(offsetY+adjustedY)*constants.ScreenWidth + uint(adjustedX+offsetX)) * 4
+					g.imageData[base] = rgba.R
+					g.imageData[base+1] = rgba.G
+					g.imageData[base+2] = rgba.B
+					g.imageData[base+3] = rgba.A
 				}
 			}
 		}
@@ -341,7 +346,12 @@ func (g *GPU) buildBGTile() {
 		tileY := ((g.ly + uint(g.scrollY)) % 0x100) / 8 * 32
 		tileID = g.getTileID(tileY, uint(x+int(g.scrollX))/8%32, g.getBGTilemapAddr())
 		paletteID := g.getBGPaletteID(tileID, int(g.scrollX%8)+x, (g.ly+uint(g.scrollY))%8)
-		g.imageData[(constants.ScreenHeight-1-(g.ly))*constants.ScreenWidth+uint(x)] = g.getBGPalette(uint(paletteID))
+		rgba := g.getBGPalette(uint(paletteID))
+		base := ((g.ly)*constants.ScreenWidth + uint(x)) * 4
+		g.imageData[base] = rgba.R
+		g.imageData[base+1] = rgba.G
+		g.imageData[base+2] = rgba.B
+		g.imageData[base+3] = rgba.A
 	}
 }
 
@@ -361,7 +371,13 @@ func (g *GPU) buildWindowTile() {
 		tileY := (g.ly - uint(g.windowY)) / 8 * 32
 		tileID = g.getTileID(tileY, uint(x-int(offsetX))/8, g.getWindowTilemapAddr())
 		paletteID := g.getBGPaletteID(tileID, int(x-int(offsetX)), (g.ly-uint(g.windowY))%8)
-		g.imageData[(constants.ScreenHeight-1-(g.ly))*constants.ScreenWidth+uint(x)] = g.getBGPalette(uint(paletteID))
+
+		rgba := g.getBGPalette(uint(paletteID))
+		base := ((g.ly)*constants.ScreenWidth + uint(x)) * 4
+		g.imageData[base] = rgba.R
+		g.imageData[base+1] = rgba.G
+		g.imageData[base+2] = rgba.B
+		g.imageData[base+3] = rgba.A
 	}
 }
 
