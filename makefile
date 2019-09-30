@@ -16,8 +16,8 @@ build-wasm:
 	GOOS=js GOARCH=wasm go build -tags=wasm -o "public/main.wasm" "cmd/gopher-boy/wasm_main.go"
 
 serve:
-	xdg-open 'http://localhost:6008'
-	serve -a :5002 || (go get -v github.com/mattn/serve && serve -a :6008)
+	xdg-open 'http://localhost:5000'
+	serve -r public -a :5000 || (go get -v github.com/mattn/serve && serve  -r public -a :5000)
 
 clean:
 	rm -f *.wasm	
