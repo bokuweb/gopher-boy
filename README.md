@@ -14,6 +14,13 @@ go get github.com/bokuweb/gopher-boy/cmd/gopher-boy
 
 This emulator uses the go library [pixel](https://github.com/faiface/pixel), which requires OpenGL. You may need to install some requirements which can be found on the [pixels readme](https://github.com/faiface/pixel#requirements).
 
+## Development
+
+```
+GO111MODULE=on go run -tags="native" cmd/gopher-boy/main.go hello.gb
+```
+
+
 ## Usage
 
 ```sh
