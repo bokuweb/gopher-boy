@@ -18,7 +18,7 @@
 
         const ins = await fetchAndInstantiate("/main.wasm", go.importObject);
         go.run(ins);
-        const rom = await fetch("./SML.gb");
+        const rom = await fetch("./hello.gb");
         const buf = await rom.arrayBuffer();
         const gb = new GB(new Uint8Array(buf));
 
@@ -31,46 +31,72 @@
         frame();
 
         window.addEventListener("keydown", e => {
-          switch (e.keyCode) {
-            case 90:
+          switch (e.key) {
+            case "z":
               return gb.keyDown(0x01);
-            case 88:
+            case "x":
               return gb.keyDown(0x02);
-            case 8:
+            case "Backspace":
               return gb.keyDown(0x04);
-            case 13:
+            case "Enter":
               return gb.keyDown(0x08);
-            case 37:
+            case "ArrowLeft":
               return gb.keyDown(0x20);
-            case 38:
+            case "ArrowUp":
               return gb.keyDown(0x40);
-            case 39:
+            case "ArrowRight":
               return gb.keyDown(0x10);
-            case 40:
+            case "ArrowDown":
               return gb.keyDown(0x80);
           }
         });
 
         window.addEventListener("keyup", e => {
-          switch (e.keyCode) {
-            case 90:
+          switch (e.key) {
+            case "z":
               return gb.keyUp(0x01);
-            case 88:
+            case "x":
               return gb.keyUp(0x02);
-            case 8:
+            case "Backspace":
               return gb.keyUp(0x04);
-            case 13:
+            case "Enter":
               return gb.keyUp(0x08);
-            case 37:
+            case "ArrowLeft":
               return gb.keyUp(0x20);
-            case 38:
+            case "ArrowUp":
               return gb.keyUp(0x40);
-            case 39:
+            case "ArrowRight":
               return gb.keyUp(0x10);
-            case 40:
+            case "ArrowDown":
               return gb.keyUp(0x80);
           }
         });
+
+        const addHandler = (classname, bit) => {
+          const el = document.querySelector(`.${classname}`);
+          el.addEventListener("mousedown", e => {
+            return gb.keyDown(bit);
+          });
+          el.addEventListener("touchstart", e => {
+            return gb.keyDown(bit);
+          });
+          el.addEventListener("mouseup", e => {
+            return gb.keyUp(bit);
+          });
+          el.addEventListener("touchend", e => {
+            return gb.keyUp(bit);
+          });
+        };
+
+        addHandler("buttonA", 0x01);
+        addHandler("buttonB", 0x02);
+        addHandler("buttonSelect", 0x04);
+        addHandler("buttonStart", 0x08);
+
+        addHandler("right", 0x10);
+        addHandler("left", 0x20);
+        addHandler("up", 0x40);
+        addHandler("down", 0x80);
       };
     </script>
     <style>
@@ -95,6 +121,7 @@
         border-radius: 10px 10px 50px 10px;
         overflow: hidden;
         box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+        transform: scale(1.5);
         /*cursor: pointer*/
       }
       .gameboy:before {
@@ -171,6 +198,51 @@
         content: "";
         z-index: 1000;
       }
+
+      .up {
+        position: absolute;
+        width: 26px;
+        height: 30px;
+        top: 296px;
+        left: 50px;
+        border-radius: 3px;
+        z-index: 998;
+        cursor: pointer;
+      }
+
+      .down {
+        position: absolute;
+        width: 26px;
+        height: 30px;
+        top: 346px;
+        left: 50px;
+        border-radius: 3px;
+        z-index: 998;
+        cursor: pointer;
+      }
+
+      .right {
+        position: absolute;
+        width: 26px;
+        height: 28px;
+        top: 322px;
+        left: 78px;
+        border-radius: 3px;
+        z-index: 998;
+        cursor: pointer;
+      }
+
+      .left {
+        position: absolute;
+        width: 26px;
+        height: 28px;
+        top: 322px;
+        left: 24px;
+        border-radius: 3px;
+        z-index: 998;
+        cursor: pointer;
+      }
+
       .hole {
         position: absolute;
         height: 46px;
@@ -184,7 +256,7 @@
           68px 0px #ddd, 85px 0px #ddd;
         content: "";
       }
-      .buttona {
+      .buttonB {
         position: absolute;
         width: 36px;
         height: 36px;
@@ -192,9 +264,21 @@
         right: 69px;
         border-radius: 100%;
         background: #a93671;
-        box-shadow: 46px -22px #a93671;
+        cursor: pointer;
       }
-      .buttonb {
+
+      .buttonA {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        top: 300px;
+        right: 24px;
+        border-radius: 100%;
+        background: #a93671;
+        cursor: pointer;
+      }
+
+      .buttonSelect {
         position: absolute;
         height: 40px;
         width: 12px;
@@ -203,7 +287,19 @@
         background: #999;
         border-radius: 10px;
         -webkit-transform: rotate(63deg);
-        box-shadow: 20px -50px #999;
+        cursor: pointer;
+      }
+
+      .buttonStart {
+        position: absolute;
+        height: 40px;
+        width: 12px;
+        bottom: 58px;
+        left: 156px;
+        background: #999;
+        border-radius: 10px;
+        -webkit-transform: rotate(63deg);
+        cursor: pointer;
       }
     </style>
   </head>
@@ -213,9 +309,15 @@
         <canvas width="160" height="144"></canvas>
       </div>
       <div class="pad"></div>
+      <div class="right"></div>
+      <div class="down"></div>
+      <div class="up"></div>
+      <div class="left"></div>
       <div class="hole"></div>
-      <div class="buttona"></div>
-      <div class="buttonb"></div>
+      <div class="buttonB"></div>
+      <div class="buttonA"></div>
+      <div class="buttonSelect"></div>
+      <div class="buttonStart"></div>
       <div class="led"></div>
     </div>
   </body>
