@@ -1943,3 +1943,8 @@ func (cpu *CPU) resolveIRQ() bool {
 	cpu.irq.Disable()
 	return true
 }
+
+// For Debugging
+func (cpu *CPU) GetRegisters() Registers {
+	return cpu.Regs
+}
