@@ -13,7 +13,7 @@ type MBC1 struct {
 	ram             *ram.RAM
 	selectedROMBank int
 	selectedRAMBank int
-	hasRAM          bool
+	romBanking      bool
 	ramEnabled      bool
 	hasBattery      bool
 	memoryMode      MBC1MemoryMode
@@ -46,18 +46,17 @@ const (
 
 // NewMBC1 constracts MBC1
 func NewMBC1(buf []byte, ramSize int, hasBattery bool) *MBC1 {
-	m := &MBC1{}
+	m := &MBC1{
+		selectedROMBank: 1,
+	}
 	m.memoryMode = ROM16mRAM8kMode
 	m.hasBattery = hasBattery
 	m.RAMSize = ramSize
 	if ramSize > 0 {
-		m.hasRAM = true
 		m.ramEnabled = true
 		m.selectedRAMBank = 0
 		m.ram = ram.NewRAM(0x8000)
 	}
-
-	m.selectedROMBank = 0
 	m.rom = rom.NewROM(buf)
 
 	return m
@@ -66,26 +65,31 @@ func NewMBC1(buf []byte, ramSize int, hasBattery bool) *MBC1 {
 func (m *MBC1) Write(addr types.Word, value byte) {
 	switch {
 	// 4 bits wide; value of 0x0A enables RAM, any other value disables
-	case addr >= 0x0000 && addr <= 0x1FFF:
-		if m.memoryMode == ROM4mRAM32kMode && m.hasRAM {
+	case addr < 0x2000:
+		if m.memoryMode == ROM4mRAM32kMode {
 			m.ramEnabled = value&0x0F == 0x0A
 		}
 		// Writing a value (XXXBBBBB - X = Don't cares, B = bank select bits) into 2000-3FFF area
 		// will select an appropriate ROM bank at 4000-7FFF
 		// Values of 0 and 1 do the same thing and point to ROM bank 1.
 		// Rom bank 0 is not accessible from 4000-7FFF and can only be read from 0000-3FFF.
-	case addr >= 0x2000 && addr <= 0x3FFF:
+	case addr < 0x4000:
 		m.switchROMBank(int(value & 0x1F))
-	case addr >= 0x4000 && addr <= 0x5FFF:
-		m.switchRAMBank(int(value & 0x03))
-	case addr >= 0x6000 && addr <= 0x7FFF:
-		if value&0x01 == 0x00 {
-			m.memoryMode = ROM16mRAM8kMode
-		} else {
-			m.memoryMode = ROM4mRAM32kMode
+	case addr < 0x6000:
+		if m.romBanking {
+			m.switchROMBank((m.selectedROMBank & 0x1F) | int(value&0xE0))
+			break
 		}
-	case addr >= 0xA000 && addr <= 0xBFFF:
-		if m.hasRAM && m.ramEnabled {
+		m.switchRAMBank(int(value & 0x03))
+
+	case addr < 0x8000:
+		m.romBanking = value&0x01 == 0x00
+		if m.romBanking {
+			m.switchRAMBank(0)
+			break
+		}
+	case addr < 0xC000:
+		if m.ramEnabled {
 			switch m.memoryMode {
 			case ROM4mRAM32kMode:
 				m.ram.Write(types.Word((int(addr)+m.selectedRAMBank*0x2000)-0xA000), value)
@@ -98,20 +102,17 @@ func (m *MBC1) Write(addr types.Word, value byte) {
 
 func (m *MBC1) Read(addr types.Word) byte {
 	if addr < 0x4000 {
-		return m.rom.Read(addr)
-	} else if addr >= 0x4000 && addr < 0x8000 {
-		base := types.Word(0x0000)
-		if m.selectedROMBank >= 2 {
-			base = types.Word((m.selectedROMBank - 1) * 0x4000)
-		}
-		return m.rom.Read(base + addr)
-	} else if addr >= 0xA000 && addr < 0xC000 {
-		if m.hasRAM && m.ramEnabled {
+		return m.rom.Read(uint32(addr))
+	} else if addr < 0x8000 {
+		base := uint32(m.selectedROMBank * 0x4000)
+		return m.rom.Read(base + uint32(addr) - 0x4000)
+	} else if addr < 0xC000 {
+		if m.ramEnabled {
 			switch m.memoryMode {
 			case ROM4mRAM32kMode:
-				m.ram.Read(types.Word((int(addr) + m.selectedRAMBank*0x2000) - 0xA000))
+				return m.ram.Read(types.Word((int(addr) + m.selectedRAMBank*0x2000) - 0xA000))
 			case ROM16mRAM8kMode:
-				m.ram.Read(types.Word((int(addr)) - 0xA000))
+				return m.ram.Read(types.Word((int(addr)) - 0xA000))
 			}
 		}
 	}
@@ -120,6 +121,9 @@ func (m *MBC1) Read(addr types.Word) byte {
 
 func (m *MBC1) switchROMBank(bank int) {
 	m.selectedROMBank = bank
+	if m.selectedROMBank == 0x00 || m.selectedROMBank == 0x20 || m.selectedROMBank == 0x40 || m.selectedROMBank == 0x60 {
+		m.selectedROMBank++
+	}
 }
 
 func (m *MBC1) switchRAMBank(bank int) {

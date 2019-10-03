@@ -23,6 +23,15 @@ type Log struct {
 
 // NewLogger is logger constructor
 func NewLogger(level LogLevel) *Log {
+	// now := time.Now().Unix()
+	// n := strconv.FormatInt(now, 10)
+	// logfile, err := os.OpenFile("./logs/test-"+n+".log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	// if err != nil {
+	// 	panic("cannnot open test.log:" + err.Error())
+	// }
+	// log.SetOutput(io.MultiWriter(logfile))
+	// log.SetFlags(log.Ldate | log.Ltime)
+
 	return &Log{
 		Level: level,
 	}

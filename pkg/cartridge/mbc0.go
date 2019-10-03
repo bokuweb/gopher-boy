@@ -22,7 +22,7 @@ func (m *MBC0) Write(addr types.Word, value byte) {
 }
 
 func (m *MBC0) Read(addr types.Word) byte {
-	return m.rom.Read(addr)
+	return m.rom.Read(uint32(addr))
 }
 
 func (m *MBC0) switchROMBank(bank int) {

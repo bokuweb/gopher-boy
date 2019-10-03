@@ -1,9 +1,5 @@
 package rom
 
-import (
-	"github.com/bokuweb/gopher-boy/pkg/types"
-)
-
 // ROM
 type ROM struct {
 	data []byte
@@ -16,6 +12,6 @@ func NewROM(v []byte) *ROM {
 	}
 }
 
-func (r *ROM) Read(addr types.Word) byte {
+func (r *ROM) Read(addr uint32) byte {
 	return r.data[addr]
 }
