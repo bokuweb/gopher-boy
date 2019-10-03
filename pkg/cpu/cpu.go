@@ -86,6 +86,7 @@ func (cpu *CPU) Step() Cycle {
 		}
 		return 0x01
 	}
+	// cpc := cpu.PC
 	if hasIRQ := cpu.resolveIRQ(); hasIRQ {
 		return 0x01
 	}
@@ -99,6 +100,7 @@ func (cpu *CPU) Step() Cycle {
 	}
 
 	operands := cpu.fetchOperands(inst.OperandsSize)
+	// cpu.logger.Info(fmt.Sprintf("PC = %X Opcode = %X %+v %+v %+v", cpc, opcode, cpu.Regs, inst, operands))
 	inst.Execute(cpu, operands)
 	return inst.Cycles
 }

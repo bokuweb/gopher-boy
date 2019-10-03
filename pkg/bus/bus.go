@@ -89,6 +89,7 @@ func NewBus(
 
 // ReadByte is byte data reader from bus
 func (b *Bus) ReadByte(addr types.Word) byte {
+
 	switch {
 	case addr >= 0x0000 && addr <= 0x7FFF:
 		if b.bootmode && addr < 0x0100 {
@@ -131,7 +132,6 @@ func (b *Bus) ReadByte(addr types.Word) byte {
 	case addr == 0xFFFF:
 		return b.irq.Read(addr - 0xFF00)
 	default:
-		return 0
 	}
 	return 0
 }
