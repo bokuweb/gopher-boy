@@ -98,7 +98,7 @@ PR welcome :)
 - [ ] 8\*16 sprite
 - [ ] LCD interrupt
 - [ ] Keypad interrupt
-- [ ] Support ROM+MBC1+RAM+BATT catridge
+- [x] Support ROM+MBC1+RAM+BATT catridge
 - [ ] Support ROM+MBC2 catridge
 - [ ] Support ROM+MBC2+BATTERY catridge
 - [ ] Support ROM+RAM catridge
