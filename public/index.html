@@ -18,7 +18,7 @@
 
         const ins = await fetchAndInstantiate("/main.wasm", go.importObject);
         go.run(ins);
-        const rom = await fetch("./hello.gb");
+        const rom = await fetch("./tobu.gb");
         const buf = await rom.arrayBuffer();
         const gb = new GB(new Uint8Array(buf));
 

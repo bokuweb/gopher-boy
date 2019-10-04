@@ -162,6 +162,11 @@ func TestROMs(t *testing.T) {
 			RomPathPrefix + "acceptance/if_ie_registers.gb",
 			100,
 		},
+		{
+			"tobu",
+			RomPathPrefix + "tobu/tobu.gb",
+			100,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
