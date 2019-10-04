@@ -95,7 +95,7 @@ PR welcome :)
 - [ ] Implement APU
 - [ ] Support scale option
 - [x] Support WebAssembly
-- [ ] 8\*16 sprite
+- [x] 8\*16 sprite
 - [ ] LCD interrupt
 - [ ] Keypad interrupt
 - [x] Support ROM+MBC1+RAM+BATT catridge
