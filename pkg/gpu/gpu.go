@@ -111,7 +111,6 @@ func NewGPU() *GPU {
 		ly:              0,
 		scrollX:         0,
 		scrollY:         0,
-		disableDisplay:  false,
 		oamDMAStarted:   false,
 		oamDMAStartAddr: 0,
 	}
@@ -128,14 +127,13 @@ func (g *GPU) Step(cycles uint) {
 	if g.bus == nil {
 		panic("Please initialize gpu with Init, before running.")
 	}
-	if g.disableDisplay {
-		g.ly = 0
-		g.clock = 0
-		return
-	}
 	g.updateMode()
 
 	g.clock += cycles
+
+	if !g.lcdEnabled() {
+		return
+	}
 	if g.clock >= CyclePerLine {
 		if g.ly == constants.ScreenHeight {
 			g.buildSprites()
@@ -164,6 +162,14 @@ func (g *GPU) Step(cycles uint) {
 		g.ly++
 		g.clock -= CyclePerLine
 	}
+}
+
+func (g *GPU) lcdEnabled() bool {
+	return (g.lcdc & 0x80) == 0x80
+}
+
+func (g *GPU) longSprite() bool {
+	return (g.lcdc & 0x04) == 0x04
 }
 
 func (g *GPU) coincidenceInterruptEnabled() bool {
@@ -304,14 +310,21 @@ func (g *GPU) buildSprites() {
 		yFlip := config&0x40 != 0
 		xFlip := config&0x20 != 0
 		isPallette1 := config&0x10 != 0
+		height := 8
+		if g.longSprite() {
+			height = 16
+			// LSB is ignored (treated as 0) in 8x16 mode.)
+			tileID = tileID & 0xFE
+		}
 		for x := 0; x < 8; x++ {
-			for y := 0; y < 8; y++ {
+			for y := 0; y < height; y++ {
 				if offsetX+x < 0 || offsetX+x >= constants.ScreenWidth {
 					continue
 				}
 				if offsetY+y < 0 || offsetY+y >= constants.ScreenHeight {
 					continue
 				}
+
 				paletteID := g.getSpritePaletteID(int(tileID), x, uint(y))
 				adjustedX := x
 				if xFlip {
