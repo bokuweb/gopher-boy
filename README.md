@@ -16,10 +16,18 @@ This emulator uses the go library [pixel](https://github.com/faiface/pixel), whi
 
 ## Development
 
+#### Native
+
 ```
 GO111MODULE=on go run -tags="native" cmd/gopher-boy/main.go hello.gb
 ```
 
+#### WebAssembly
+
+```
+make build-wasm
+make serve
+```
 
 ## Usage
 
