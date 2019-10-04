@@ -98,22 +98,23 @@ PR welcome :)
 - [x] 8\*16 sprite
 - [ ] LCD interrupt
 - [ ] Keypad interrupt
-- [x] Support ROM+MBC1+RAM+BATT catridge
-- [ ] Support ROM+MBC2 catridge
-- [ ] Support ROM+MBC2+BATTERY catridge
-- [ ] Support ROM+RAM catridge
-- [ ] Support ROM+RAM+BATTERY catridge
-- [ ] Support ROM+MMM01 catridge
-- [ ] Support ROM+MMM01+SRAM catridge
-- [ ] Support ROM+MMM01+SRAM+BATT catridge
-- [ ] Support ROM+MBC3+RAM catridge
-- [ ] Support ROM+MBC3+RAM+BATT catridge
-- [ ] Support ROM+MBC5 catridge
-- [ ] Support ROM+MBC5+RAM catridge
-- [ ] Support ROM+MBC5+RAM+BATT catridge
-- [ ] Support ROM+MBC5+RUMBLE catridge
-- [ ] Support ROM+MBC5+RUMBLE+SRAM catridge
-- [ ] Support ROM+MBC5+RUMBLE+SRAM+BATT catridge
-- [ ] Support Pocket Camera catridge
-- [ ] Support Bandai TAMA5 catridge
-- [ ] Support Hudson HuC-3 catridge
+- [ ] cartridges
+  - [x] Support ROM+MBC1+RAM+BATT catridge
+  - [ ] Support ROM+MBC2 catridge
+  - [ ] Support ROM+MBC2+BATTERY catridge
+  - [ ] Support ROM+RAM catridge
+  - [ ] Support ROM+RAM+BATTERY catridge
+  - [ ] Support ROM+MMM01 catridge
+  - [ ] Support ROM+MMM01+SRAM catridge
+  - [ ] Support ROM+MMM01+SRAM+BATT catridge
+  - [ ] Support ROM+MBC3+RAM catridge
+  - [ ] Support ROM+MBC3+RAM+BATT catridge
+  - [ ] Support ROM+MBC5 catridge
+  - [ ] Support ROM+MBC5+RAM catridge
+  - [ ] Support ROM+MBC5+RAM+BATT catridge
+  - [ ] Support ROM+MBC5+RUMBLE catridge
+  - [ ] Support ROM+MBC5+RUMBLE+SRAM catridge
+  - [ ] Support ROM+MBC5+RUMBLE+SRAM+BATT catridge
+  - [ ] Support Pocket Camera catridge
+  - [ ] Support Bandai TAMA5 catridge
+  - [ ] Support Hudson HuC-3 catridge
