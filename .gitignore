@@ -3,6 +3,6 @@ logs/*.log
 *.sym
 *.wat
 logs
-public/main.wasm
 gopher-boy
-public/*.gb
+docs/*.gb
+main.wat
