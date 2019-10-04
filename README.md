@@ -96,6 +96,10 @@ Update expected images
 make reg-update
 ```
 
+## Credit
+
+"gopher" by Renée French CC-BY-3.0
+
 ## Known Bugs and TODO list
 
 PR welcome :)
