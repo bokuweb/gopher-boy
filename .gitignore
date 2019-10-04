@@ -1,6 +1,7 @@
 reg.json
 logs/*.log
 *.sym
+*.wat
 logs
 public/main.wasm
 gopher-boy
