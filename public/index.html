@@ -1,118 +1,64 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Testing WebAssembly</title>
-    <script src="wasm_exec.js"></script>
-    <script type="text/javascript">
-      function fetchAndInstantiate(url, importObject) {
-        return fetch(url)
-          .then(response => response.arrayBuffer())
-          .then(bytes => WebAssembly.instantiate(bytes, importObject))
-          .then(results => results.instance);
-      }
-      const go = new Go();
-      window.onload = async () => {
-        const canvas = document.querySelector("canvas");
-        const ctx = canvas.getContext("2d");
-        const image = ctx.createImageData(160, 144);
-
-        const ins = await fetchAndInstantiate("/main.wasm", go.importObject);
-        go.run(ins);
-        const rom = await fetch("./tobu.gb");
-        const buf = await rom.arrayBuffer();
-        const gb = new GB(new Uint8Array(buf));
-
-        const frame = () => {
-          const img = gb.next();
-          image.data.set(img);
-          ctx.putImageData(image, 0, 0);
-          window.requestAnimationFrame(frame);
-        };
-        frame();
-
-        window.addEventListener("keydown", e => {
-          switch (e.key) {
-            case "z":
-              return gb.keyDown(0x01);
-            case "x":
-              return gb.keyDown(0x02);
-            case "Backspace":
-              return gb.keyDown(0x04);
-            case "Enter":
-              return gb.keyDown(0x08);
-            case "ArrowLeft":
-              return gb.keyDown(0x20);
-            case "ArrowUp":
-              return gb.keyDown(0x40);
-            case "ArrowRight":
-              return gb.keyDown(0x10);
-            case "ArrowDown":
-              return gb.keyDown(0x80);
-          }
-        });
-
-        window.addEventListener("keyup", e => {
-          switch (e.key) {
-            case "z":
-              return gb.keyUp(0x01);
-            case "x":
-              return gb.keyUp(0x02);
-            case "Backspace":
-              return gb.keyUp(0x04);
-            case "Enter":
-              return gb.keyUp(0x08);
-            case "ArrowLeft":
-              return gb.keyUp(0x20);
-            case "ArrowUp":
-              return gb.keyUp(0x40);
-            case "ArrowRight":
-              return gb.keyUp(0x10);
-            case "ArrowDown":
-              return gb.keyUp(0x80);
-          }
-        });
-
-        const addHandler = (classname, bit) => {
-          const el = document.querySelector(`.${classname}`);
-          el.addEventListener("mousedown", e => {
-            return gb.keyDown(bit);
-          });
-          el.addEventListener("touchstart", e => {
-            return gb.keyDown(bit);
-          });
-          el.addEventListener("mouseup", e => {
-            return gb.keyUp(bit);
-          });
-          el.addEventListener("touchend", e => {
-            return gb.keyUp(bit);
-          });
-        };
-
-        addHandler("buttonA", 0x01);
-        addHandler("buttonB", 0x02);
-        addHandler("buttonSelect", 0x04);
-        addHandler("buttonStart", 0x08);
-
-        addHandler("right", 0x10);
-        addHandler("left", 0x20);
-        addHandler("up", 0x40);
-        addHandler("down", 0x80);
-      };
-    </script>
+    <title>Gopher Boy</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/nes.css@2.2.1/css/nes.min.css"
+      rel="stylesheet"
+    />
     <style>
       html {
         padding: 0;
         margin: 0;
       }
+      * {
+        font-family: "Press Start 2P";
+      }
+
       body {
         background: #1abc9c;
         display: flex;
+        position: relative;
         justify-content: center;
         align-items: center;
         height: 100vh;
         padding: 0;
         margin: 0;
       }
+
+      .title {
+        position: fixed;
+        top: 48px;
+        left: 48px;
+        display: flex;
+        align-items: center;
+      }
+
+      .title h1 {
+        font-size: 32px;
+        color: white;
+        padding-top: 12px;
+        padding-left: 12px;
+      }
+
+      .title img {
+        height: 64px;
+        width: auto;
+      }
+
+      .content label {
+        position: absolute;
+        margin: 80px 0 0 72px;
+      }
+
+      .content input {
+        display: none;
+      }
+
       .gameboy {
         height: 480px;
         width: 300px;
@@ -121,7 +67,7 @@
         border-radius: 10px 10px 50px 10px;
         overflow: hidden;
         box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-        transform: scale(1.5);
+        transform: scale(1.2);
         /*cursor: pointer*/
       }
       .gameboy:before {
@@ -207,7 +153,6 @@
         left: 50px;
         border-radius: 3px;
         z-index: 998;
-        cursor: pointer;
       }
 
       .down {
@@ -218,7 +163,6 @@
         left: 50px;
         border-radius: 3px;
         z-index: 998;
-        cursor: pointer;
       }
 
       .right {
@@ -229,7 +173,6 @@
         left: 78px;
         border-radius: 3px;
         z-index: 998;
-        cursor: pointer;
       }
 
       .left {
@@ -240,7 +183,6 @@
         left: 24px;
         border-radius: 3px;
         z-index: 998;
-        cursor: pointer;
       }
 
       .hole {
@@ -264,7 +206,6 @@
         right: 69px;
         border-radius: 100%;
         background: #a93671;
-        cursor: pointer;
       }
 
       .buttonA {
@@ -275,7 +216,6 @@
         right: 24px;
         border-radius: 100%;
         background: #a93671;
-        cursor: pointer;
       }
 
       .buttonSelect {
@@ -301,24 +241,208 @@
         -webkit-transform: rotate(63deg);
         cursor: pointer;
       }
+
+      .github-link {
+        position: fixed;
+        bottom: 68px;
+        right: 68px;
+        color: black;
+        text-decoration: none;
+      }
+
+      .nes-octocat {
+        position: absolute;
+        top: 88px;
+        left: 170px;
+      }
     </style>
   </head>
   <body>
-    <div class="gameboy">
-      <div class="screen">
-        <canvas width="160" height="144"></canvas>
-      </div>
-      <div class="pad"></div>
-      <div class="right"></div>
-      <div class="down"></div>
-      <div class="up"></div>
-      <div class="left"></div>
-      <div class="hole"></div>
-      <div class="buttonB"></div>
-      <div class="buttonA"></div>
-      <div class="buttonSelect"></div>
-      <div class="buttonStart"></div>
-      <div class="led"></div>
+    <div class="title">
+      <img src="/gopher.png" alt="" />
+      <h1>GopherBoy</h1>
     </div>
+    <div class="content">
+      <div class="gameboy">
+        <div class="screen">
+          <canvas width="160" height="144"></canvas>
+        </div>
+        <div class="pad"></div>
+        <div class="right"></div>
+        <div class="down"></div>
+        <div class="up"></div>
+        <div class="left"></div>
+        <div class="hole"></div>
+        <div class="buttonB"></div>
+        <div class="buttonA"></div>
+        <div class="buttonSelect"></div>
+        <div class="buttonStart"></div>
+        <div class="led"></div>
+      </div>
+      <div>
+        <label class="nes-btn" for="file_upload">
+          LOAD ROM
+          <input type="file" class="file" id="file_upload" />
+        </label>
+      </div>
+    </div>
+
+    <a
+      href="https://github.com/bokuweb/gopher-boy/"
+      target="_blank"
+      rel="noopener"
+      class="github-link"
+      ><p class="nes-balloon from-right">Fork me<br />on GitHub</p>
+      <i class="nes-octocat"></i>
+    </a>
+
+    <script src="wasm_exec.js"></script>
+    <script type="text/javascript">
+      if (window.devicePixelRatio > 1 && window.devicePixelRatio < 3) {
+        document.querySelector(".content").style.transform = "scale(1.4)";
+      } else if (window.devicePixelRatio >= 3) {
+        document.querySelector(".content").style.transform = "scale(2)";
+      }
+
+      const init = async buf => {
+        const go = new Go();
+        const canvas = document.querySelector("canvas");
+        const input = document.querySelector("#file_upload");
+        const ctx = canvas.getContext("2d");
+        const image = ctx.createImageData(160, 144);
+
+        const res = await fetch("./main.wasm");
+        const bytes = await res.arrayBuffer();
+        const { instance } = await WebAssembly.instantiate(
+          bytes,
+          go.importObject
+        );
+        go.run(instance);
+
+        if (!buf) {
+          const rom = await fetch("./tobu.gb");
+          buf = await rom.arrayBuffer();
+        }
+        const gb = new GB(new Uint8Array(buf));
+
+        document.querySelector(".led").style.background = "red";
+
+        const frame = () => {
+          const img = gb.next();
+          image.data.set(img);
+          ctx.putImageData(image, 0, 0);
+          window.requestAnimationFrame(frame);
+        };
+        frame();
+
+        const onKeydown = e => {
+          switch (e.key) {
+            case "z":
+              return gb.keyDown(0x01);
+            case "x":
+              return gb.keyDown(0x02);
+            case "Backspace":
+              return gb.keyDown(0x04);
+            case "Enter":
+              return gb.keyDown(0x08);
+            case "ArrowLeft":
+              return gb.keyDown(0x20);
+            case "ArrowUp":
+              return gb.keyDown(0x40);
+            case "ArrowRight":
+              return gb.keyDown(0x10);
+            case "ArrowDown":
+              return gb.keyDown(0x80);
+          }
+        };
+
+        const onKeyup = e => {
+          switch (e.key) {
+            case "z":
+              return gb.keyUp(0x01);
+            case "x":
+              return gb.keyUp(0x02);
+            case "Backspace":
+              return gb.keyUp(0x04);
+            case "Enter":
+              return gb.keyUp(0x08);
+            case "ArrowLeft":
+              return gb.keyUp(0x20);
+            case "ArrowUp":
+              return gb.keyUp(0x40);
+            case "ArrowRight":
+              return gb.keyUp(0x10);
+            case "ArrowDown":
+              return gb.keyUp(0x80);
+          }
+        };
+
+        const removeHandler = classname => {
+          const el = document.querySelector(`.${classname}`);
+          const elClone = el.cloneNode(true);
+          el.parentNode.replaceChild(elClone, el);
+        };
+
+        const onFileChange = e => {
+          const files = e.target.files;
+          const file = files[0];
+          const reader = new FileReader();
+          reader.onload = e => {
+            input.removeEventListener("change", onFileChange);
+            window.removeEventListener("keydown", onKeydown);
+            window.removeEventListener("keyup", onKeyup);
+
+            removeHandler("buttonA");
+            removeHandler("buttonB");
+            removeHandler("buttonSelect");
+            removeHandler("buttonStart");
+            removeHandler("right");
+            removeHandler("left");
+            removeHandler("up");
+            removeHandler("down");
+
+            init(e.currentTarget.result);
+          };
+          // Read in the image file as a data URL.
+          reader.readAsArrayBuffer(file);
+        };
+
+        input.addEventListener("change", onFileChange);
+
+        window.addEventListener("keydown", onKeydown);
+
+        window.addEventListener("keyup", onKeyup);
+
+        const addHandler = (classname, bit) => {
+          const el = document.querySelector(`.${classname}`);
+          el.addEventListener("mousedown", e => {
+            return gb.keyDown(bit);
+          });
+          el.addEventListener("touchstart", e => {
+            return gb.keyDown(bit);
+          });
+          el.addEventListener("mouseup", e => {
+            return gb.keyUp(bit);
+          });
+          el.addEventListener("touchend", e => {
+            return gb.keyUp(bit);
+          });
+        };
+
+        addHandler("buttonA", 0x01);
+        addHandler("buttonB", 0x02);
+        addHandler("buttonSelect", 0x04);
+        addHandler("buttonStart", 0x08);
+
+        addHandler("right", 0x10);
+        addHandler("left", 0x20);
+        addHandler("up", 0x40);
+        addHandler("down", 0x80);
+      };
+
+      window.onload = async () => {
+        init();
+      };
+    </script>
   </body>
 </html>
