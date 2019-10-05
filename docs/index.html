@@ -289,7 +289,7 @@
   </head>
   <body>
     <div class="title">
-      <img src="/gopher.png" alt="" />
+      <img src="./gopher.png" alt="" />
       <h1>GopherBoy</h1>
     </div>
     <div class="content">
@@ -336,6 +336,12 @@
 
     <script src="wasm_exec.js"></script>
     <script type="text/javascript">
+      let bytes;
+      (async () => {
+        const res = await fetch("./main.wasm");
+        bytes = await res.arrayBuffer();
+      })();
+
       const init = async buf => {
         const go = new Go();
         const canvas = document.querySelector("canvas");
@@ -344,8 +350,6 @@
         const ctx = canvas.getContext("2d");
         const image = ctx.createImageData(160, 144);
 
-        const res = await fetch("./main.wasm");
-        const bytes = await res.arrayBuffer();
         const { instance } = await WebAssembly.instantiate(
           bytes,
           go.importObject
