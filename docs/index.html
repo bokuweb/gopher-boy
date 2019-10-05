@@ -464,9 +464,20 @@
             el.addEventListener("mousedown", e => {
               return gb.keyDown(bit);
             });
-            el.addEventListener("touchstart", e => {
-              return gb.keyDown(bit);
-            });
+            let lastTouch = 0;
+            el.addEventListener(
+              "touchstart",
+              e => {
+                const now = window.performance.now();
+                if (now - lastTouch <= 500) {
+                  event.preventDefault();
+                }
+                lastTouch = now;
+                navigator.vibrate && navigator.vibrate(100);
+                return gb.keyDown(bit);
+              },
+              true
+            );
             el.addEventListener("mouseup", e => {
               return gb.keyUp(bit);
             });
