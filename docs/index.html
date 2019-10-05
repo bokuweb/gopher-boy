@@ -2,6 +2,11 @@
 <html>
   <head>
     <title>Gopher Boy</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+      name="viewport"
+    />
+    <meta name="viewport" content="width=device-width" />
     <link
       href="https://fonts.googleapis.com/css?family=Press+Start+2P"
       rel="stylesheet"
@@ -52,7 +57,7 @@
 
       .content label {
         position: absolute;
-        margin: 80px 0 0 72px;
+        margin: 64px 0 0 72px;
       }
 
       .content input {
@@ -67,7 +72,6 @@
         border-radius: 10px 10px 50px 10px;
         overflow: hidden;
         box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-        transform: scale(1.2);
         /*cursor: pointer*/
       }
       .gameboy:before {
@@ -255,11 +259,21 @@
         top: 88px;
         left: 170px;
       }
+
+      @media screen and (max-width: 780px) {
+        .title {
+          display: none;
+        }
+
+        .github-link {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="title">
-      <img src="./gopher.png" alt="" />
+      <img src="/gopher.png" alt="" />
       <h1>GopherBoy</h1>
     </div>
     <div class="content">
@@ -298,12 +312,6 @@
 
     <script src="wasm_exec.js"></script>
     <script type="text/javascript">
-      if (window.devicePixelRatio > 1 && window.devicePixelRatio < 3) {
-        document.querySelector(".content").style.transform = "scale(1.4)";
-      } else if (window.devicePixelRatio >= 3) {
-        document.querySelector(".content").style.transform = "scale(2)";
-      }
-
       const init = async buf => {
         const go = new Go();
         const canvas = document.querySelector("canvas");
