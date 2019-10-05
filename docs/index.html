@@ -3,10 +3,9 @@
   <head>
     <title>Gopher Boy</title>
     <meta
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
       name="viewport"
     />
-    <meta name="viewport" content="width=device-width" />
     <link
       href="https://fonts.googleapis.com/css?family=Press+Start+2P"
       rel="stylesheet"
@@ -33,6 +32,7 @@
         height: 100vh;
         padding: 0;
         margin: 0;
+        overflow: hidden;
       }
 
       .title {
@@ -55,9 +55,20 @@
         width: auto;
       }
 
-      .content label {
-        position: absolute;
-        margin: 64px 0 0 72px;
+      .content {
+        width: 400px;
+        height: 680px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .content div.control {
+        display: flex;
+        width: 400px;
+        height: 160px;
+        align-items: center;
+        justify-content: center;
       }
 
       .content input {
@@ -151,8 +162,8 @@
 
       .up {
         position: absolute;
-        width: 26px;
-        height: 30px;
+        width: 46px;
+        height: 50px;
         top: 296px;
         left: 50px;
         border-radius: 3px;
@@ -161,8 +172,8 @@
 
       .down {
         position: absolute;
-        width: 26px;
-        height: 30px;
+        width: 46px;
+        height: 50px;
         top: 346px;
         left: 50px;
         border-radius: 3px;
@@ -171,8 +182,8 @@
 
       .right {
         position: absolute;
-        width: 26px;
-        height: 28px;
+        width: 46px;
+        height: 50px;
         top: 322px;
         left: 78px;
         border-radius: 3px;
@@ -181,8 +192,8 @@
 
       .left {
         position: absolute;
-        width: 26px;
-        height: 28px;
+        width: 46px;
+        height: 50px;
         top: 322px;
         left: 24px;
         border-radius: 3px;
@@ -260,6 +271,11 @@
         left: 170px;
       }
 
+      .nes-select {
+        width: 160px;
+        margin-left: 16px;
+      }
+
       @media screen and (max-width: 780px) {
         .title {
           display: none;
@@ -293,11 +309,19 @@
         <div class="buttonStart"></div>
         <div class="led"></div>
       </div>
-      <div>
-        <label class="nes-btn" for="file_upload">
-          LOAD ROM
-          <input type="file" class="file" id="file_upload" />
-        </label>
+      <div class="control">
+        <div>
+          <label class="nes-btn" for="file_upload">
+            LOADROM
+            <input type="file" class="file" id="file_upload" />
+          </label>
+        </div>
+        <div class="nes-select">
+          <select required id="default_select">
+            <option value="tobu.gb">Tobu Tobu Girl</option>
+            <option value="dino.gb">Dino's Offline Adventure</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -316,6 +340,7 @@
         const go = new Go();
         const canvas = document.querySelector("canvas");
         const input = document.querySelector("#file_upload");
+        const selector = document.querySelector("select");
         const ctx = canvas.getContext("2d");
         const image = ctx.createImageData(160, 144);
 
@@ -391,28 +416,38 @@
           el.parentNode.replaceChild(elClone, el);
         };
 
+        const cleanup = () => {
+          input.removeEventListener("change", onFileChange);
+          window.removeEventListener("keydown", onKeydown);
+          window.removeEventListener("keyup", onKeyup);
+          removeHandler("buttonA");
+          removeHandler("buttonB");
+          removeHandler("buttonSelect");
+          removeHandler("buttonStart");
+          removeHandler("right");
+          removeHandler("left");
+          removeHandler("up");
+          removeHandler("down");
+        };
+
         const onFileChange = e => {
           const files = e.target.files;
           const file = files[0];
           const reader = new FileReader();
+          cleanup();
           reader.onload = e => {
-            input.removeEventListener("change", onFileChange);
-            window.removeEventListener("keydown", onKeydown);
-            window.removeEventListener("keyup", onKeyup);
-
-            removeHandler("buttonA");
-            removeHandler("buttonB");
-            removeHandler("buttonSelect");
-            removeHandler("buttonStart");
-            removeHandler("right");
-            removeHandler("left");
-            removeHandler("up");
-            removeHandler("down");
-
             init(e.currentTarget.result);
           };
           // Read in the image file as a data URL.
           reader.readAsArrayBuffer(file);
+        };
+
+        const onROMChange = async e => {
+          cleanup();
+          console.log(e.target.value);
+          const rom = await fetch(`./${e.target.value}`);
+          const buf = await rom.arrayBuffer();
+          init(buf);
         };
 
         input.addEventListener("change", onFileChange);
@@ -420,6 +455,8 @@
         window.addEventListener("keydown", onKeydown);
 
         window.addEventListener("keyup", onKeyup);
+
+        selector.addEventListener("change", onROMChange);
 
         const addHandler = (classname, bit) => {
           const el = document.querySelector(`.${classname}`);
