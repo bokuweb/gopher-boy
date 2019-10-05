@@ -164,8 +164,8 @@
         position: absolute;
         width: 46px;
         height: 50px;
-        top: 296px;
-        left: 50px;
+        top: 276px;
+        left: 40px;
         border-radius: 3px;
         z-index: 998;
       }
@@ -174,8 +174,8 @@
         position: absolute;
         width: 46px;
         height: 50px;
-        top: 346px;
-        left: 50px;
+        top: 350px;
+        left: 40px;
         border-radius: 3px;
         z-index: 998;
       }
@@ -184,7 +184,7 @@
         position: absolute;
         width: 46px;
         height: 50px;
-        top: 322px;
+        top: 310px;
         left: 78px;
         border-radius: 3px;
         z-index: 998;
@@ -194,8 +194,8 @@
         position: absolute;
         width: 46px;
         height: 50px;
-        top: 322px;
-        left: 24px;
+        top: 310px;
+        left: 8px;
         border-radius: 3px;
         z-index: 998;
       }
@@ -336,160 +336,156 @@
 
     <script src="wasm_exec.js"></script>
     <script type="text/javascript">
-      let bytes;
-      (async () => {
-        const res = await fetch("./main.wasm");
-        bytes = await res.arrayBuffer();
-      })();
-
-      const init = async buf => {
+      window.onload = async () => {
         const go = new Go();
-        const canvas = document.querySelector("canvas");
-        const input = document.querySelector("#file_upload");
-        const selector = document.querySelector("select");
-        const ctx = canvas.getContext("2d");
-        const image = ctx.createImageData(160, 144);
-
+        const res = await fetch("./main.wasm");
+        const bytes = await res.arrayBuffer();
         const { instance } = await WebAssembly.instantiate(
           bytes,
           go.importObject
         );
         go.run(instance);
 
-        if (!buf) {
-          const rom = await fetch("./tobu.gb");
-          buf = await rom.arrayBuffer();
-        }
-        const gb = new GB(new Uint8Array(buf));
+        const init = async buf => {
+          const canvas = document.querySelector("canvas");
+          const input = document.querySelector("#file_upload");
+          const selector = document.querySelector("select");
+          const ctx = canvas.getContext("2d");
+          const image = ctx.createImageData(160, 144);
 
-        document.querySelector(".led").style.background = "red";
-
-        const frame = () => {
-          const img = gb.next();
-          image.data.set(img);
-          ctx.putImageData(image, 0, 0);
-          window.requestAnimationFrame(frame);
-        };
-        frame();
-
-        const onKeydown = e => {
-          switch (e.key) {
-            case "z":
-              return gb.keyDown(0x01);
-            case "x":
-              return gb.keyDown(0x02);
-            case "Backspace":
-              return gb.keyDown(0x04);
-            case "Enter":
-              return gb.keyDown(0x08);
-            case "ArrowLeft":
-              return gb.keyDown(0x20);
-            case "ArrowUp":
-              return gb.keyDown(0x40);
-            case "ArrowRight":
-              return gb.keyDown(0x10);
-            case "ArrowDown":
-              return gb.keyDown(0x80);
+          if (!buf) {
+            const rom = await fetch("./tobu.gb");
+            buf = await rom.arrayBuffer();
           }
-        };
+          let gb = new GB(new Uint8Array(buf));
 
-        const onKeyup = e => {
-          switch (e.key) {
-            case "z":
-              return gb.keyUp(0x01);
-            case "x":
-              return gb.keyUp(0x02);
-            case "Backspace":
-              return gb.keyUp(0x04);
-            case "Enter":
-              return gb.keyUp(0x08);
-            case "ArrowLeft":
-              return gb.keyUp(0x20);
-            case "ArrowUp":
-              return gb.keyUp(0x40);
-            case "ArrowRight":
-              return gb.keyUp(0x10);
-            case "ArrowDown":
-              return gb.keyUp(0x80);
-          }
-        };
+          document.querySelector(".led").style.background = "red";
 
-        const removeHandler = classname => {
-          const el = document.querySelector(`.${classname}`);
-          const elClone = el.cloneNode(true);
-          el.parentNode.replaceChild(elClone, el);
-        };
-
-        const cleanup = () => {
-          input.removeEventListener("change", onFileChange);
-          window.removeEventListener("keydown", onKeydown);
-          window.removeEventListener("keyup", onKeyup);
-          removeHandler("buttonA");
-          removeHandler("buttonB");
-          removeHandler("buttonSelect");
-          removeHandler("buttonStart");
-          removeHandler("right");
-          removeHandler("left");
-          removeHandler("up");
-          removeHandler("down");
-        };
-
-        const onFileChange = e => {
-          const files = e.target.files;
-          const file = files[0];
-          const reader = new FileReader();
-          cleanup();
-          reader.onload = e => {
-            init(e.currentTarget.result);
+          const frame = () => {
+            if (!gb) return;
+            const img = gb.next();
+            image.data.set(img);
+            ctx.putImageData(image, 0, 0);
+            window.requestAnimationFrame(frame);
           };
-          // Read in the image file as a data URL.
-          reader.readAsArrayBuffer(file);
+          frame();
+
+          const onKeydown = e => {
+            switch (e.key) {
+              case "z":
+                return gb.keyDown(0x01);
+              case "x":
+                return gb.keyDown(0x02);
+              case "Backspace":
+                return gb.keyDown(0x04);
+              case "Enter":
+                return gb.keyDown(0x08);
+              case "ArrowLeft":
+                return gb.keyDown(0x20);
+              case "ArrowUp":
+                return gb.keyDown(0x40);
+              case "ArrowRight":
+                return gb.keyDown(0x10);
+              case "ArrowDown":
+                return gb.keyDown(0x80);
+            }
+          };
+
+          const onKeyup = e => {
+            switch (e.key) {
+              case "z":
+                return gb.keyUp(0x01);
+              case "x":
+                return gb.keyUp(0x02);
+              case "Backspace":
+                return gb.keyUp(0x04);
+              case "Enter":
+                return gb.keyUp(0x08);
+              case "ArrowLeft":
+                return gb.keyUp(0x20);
+              case "ArrowUp":
+                return gb.keyUp(0x40);
+              case "ArrowRight":
+                return gb.keyUp(0x10);
+              case "ArrowDown":
+                return gb.keyUp(0x80);
+            }
+          };
+
+          const removeHandler = classname => {
+            const el = document.querySelector(`.${classname}`);
+            const elClone = el.cloneNode(true);
+            el.parentNode.replaceChild(elClone, el);
+          };
+
+          const cleanup = () => {
+            input.removeEventListener("change", onFileChange);
+            window.removeEventListener("keydown", onKeydown);
+            window.removeEventListener("keyup", onKeyup);
+            removeHandler("buttonA");
+            removeHandler("buttonB");
+            removeHandler("buttonSelect");
+            removeHandler("buttonStart");
+            removeHandler("right");
+            removeHandler("left");
+            removeHandler("up");
+            removeHandler("down");
+            gb = null;
+          };
+
+          const onFileChange = e => {
+            const files = e.target.files;
+            const file = files[0];
+            const reader = new FileReader();
+            cleanup();
+            reader.onload = e => {
+              init(e.currentTarget.result);
+            };
+            reader.readAsArrayBuffer(file);
+          };
+
+          const onROMChange = async e => {
+            cleanup();
+            const rom = await fetch(`./${e.target.value}`);
+            const buf = await rom.arrayBuffer();
+            init(buf);
+          };
+
+          input.addEventListener("change", onFileChange);
+
+          window.addEventListener("keydown", onKeydown);
+
+          window.addEventListener("keyup", onKeyup);
+
+          selector.addEventListener("change", onROMChange);
+
+          const addHandler = (classname, bit) => {
+            const el = document.querySelector(`.${classname}`);
+            el.addEventListener("mousedown", e => {
+              return gb.keyDown(bit);
+            });
+            el.addEventListener("touchstart", e => {
+              return gb.keyDown(bit);
+            });
+            el.addEventListener("mouseup", e => {
+              return gb.keyUp(bit);
+            });
+            el.addEventListener("touchend", e => {
+              return gb.keyUp(bit);
+            });
+          };
+
+          addHandler("buttonA", 0x01);
+          addHandler("buttonB", 0x02);
+          addHandler("buttonSelect", 0x04);
+          addHandler("buttonStart", 0x08);
+
+          addHandler("right", 0x10);
+          addHandler("left", 0x20);
+          addHandler("up", 0x40);
+          addHandler("down", 0x80);
         };
 
-        const onROMChange = async e => {
-          cleanup();
-          console.log(e.target.value);
-          const rom = await fetch(`./${e.target.value}`);
-          const buf = await rom.arrayBuffer();
-          init(buf);
-        };
-
-        input.addEventListener("change", onFileChange);
-
-        window.addEventListener("keydown", onKeydown);
-
-        window.addEventListener("keyup", onKeyup);
-
-        selector.addEventListener("change", onROMChange);
-
-        const addHandler = (classname, bit) => {
-          const el = document.querySelector(`.${classname}`);
-          el.addEventListener("mousedown", e => {
-            return gb.keyDown(bit);
-          });
-          el.addEventListener("touchstart", e => {
-            return gb.keyDown(bit);
-          });
-          el.addEventListener("mouseup", e => {
-            return gb.keyUp(bit);
-          });
-          el.addEventListener("touchend", e => {
-            return gb.keyUp(bit);
-          });
-        };
-
-        addHandler("buttonA", 0x01);
-        addHandler("buttonB", 0x02);
-        addHandler("buttonSelect", 0x04);
-        addHandler("buttonStart", 0x08);
-
-        addHandler("right", 0x10);
-        addHandler("left", 0x20);
-        addHandler("up", 0x40);
-        addHandler("down", 0x80);
-      };
-
-      window.onload = async () => {
         init();
       };
     </script>
