@@ -336,6 +336,15 @@
 
     <script src="wasm_exec.js"></script>
     <script type="text/javascript">
+      document.addEventListener(
+        "touchmove",
+        function(event) {
+          if (event.scale !== 1) {
+            event.preventDefault();
+          }
+        },
+        false
+      );
       window.onload = async () => {
         const go = new Go();
         const res = await fetch("./main.wasm");
@@ -349,6 +358,7 @@
         const init = async buf => {
           const canvas = document.querySelector("canvas");
           const input = document.querySelector("#file_upload");
+          const elGb = document.querySelector(".gameboy");
           const selector = document.querySelector("select");
           const ctx = canvas.getContext("2d");
           const image = ctx.createImageData(160, 144);
@@ -473,12 +483,18 @@
               },
               true
             );
+
             el.addEventListener("mouseup", e => {
               return gb.keyUp(bit);
             });
-            el.addEventListener("touchend", e => {
-              return gb.keyUp(bit);
-            });
+            el.addEventListener(
+              "touchend",
+              e => {
+                e.preventDefault();
+                return gb.keyUp(bit);
+              },
+              true
+            );
           };
 
           addHandler("buttonA", 0x01);
