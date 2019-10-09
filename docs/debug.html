@@ -7,80 +7,219 @@
       name="viewport"
     />
     <link
-      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
-      rel="stylesheet"
-    />
-    <link
-      href="https://unpkg.com/nes.css@2.2.1/css/nes.min.css"
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
       rel="stylesheet"
     />
     <link href="./style.css" rel="stylesheet" />
     <style>
       * {
-        font-family: "Press Start 2P";
         touch-action: manipulation;
       }
 
+      html {
+        height: 100%;
+      }
       body {
-        background: #1abc9c;
+        background: #1a202c;
         display: flex;
         position: relative;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        height: 100%;
+        min-width: 1280px;
         padding: 0;
         margin: 0;
         overflow: hidden;
       }
+
+      .container {
+        height: 100%;
+        display: flex;
+      }
+
+      .player {
+        max-width: 360px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .debugger {
+        padding: 48px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .tiledata0 {
+        background: #fff;
+        width: 100%;
+        height: auto;
+      }
     </style>
   </head>
   <body>
-    <div class="title">
-      <img src="./gopher.png" alt="" />
-      <h1>GopherBoy</h1>
-    </div>
-    <div class="content">
-      <div class="gameboy">
-        <div class="screen">
-          <canvas class="game" width="160" height="144"></canvas>
+    <div class="container w-full">
+      <div class="flex flex-col player">
+        <div class="gameboy">
+          <div class="screen">
+            <canvas class="game" width="160" height="144"></canvas>
+          </div>
+          <div class="pad"></div>
+          <div class="right"></div>
+          <div class="down"></div>
+          <div class="up"></div>
+          <div class="left"></div>
+          <div class="hole"></div>
+          <div class="buttonB"></div>
+          <div class="buttonA"></div>
+          <div class="buttonSelect"></div>
+          <div class="buttonStart"></div>
+          <div class="led"></div>
         </div>
-        <div class="pad"></div>
-        <div class="right"></div>
-        <div class="down"></div>
-        <div class="up"></div>
-        <div class="left"></div>
-        <div class="hole"></div>
-        <div class="buttonB"></div>
-        <div class="buttonA"></div>
-        <div class="buttonSelect"></div>
-        <div class="buttonStart"></div>
-        <div class="led"></div>
+        <!--<button
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded items-center"
+        >
+          <svg
+            class="fill-current w-4 h-4 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+          </svg>
+          <span>Download</span>
+        </button>
+         <div class="control">
+          <div>
+            <label
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+              for="file_upload"
+            >
+              Load
+              <input type="file" class="file" id="file_upload" />
+            </label>
+          </div>
+        </div> -->
       </div>
-      <div class="control">
-        <div>
-          <label class="nes-btn" for="file_upload">
-            LOADROM
-            <input type="file" class="file" id="file_upload" />
-          </label>
+      <div class="debugger">
+        <div class="table w-full">
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm rounded-s"
+            >
+              A cell with more content
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Cell 2
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Cell 3
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Cell 3
+            </div>
+          </div>
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <canvas class="tiledata0" width="256" height="256"></canvas>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <canvas class="tiledata0" width="256" height="256"></canvas>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <canvas class="tiledata0" width="256" height="256"></canvas>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <canvas class="tiledata0" width="256" height="256"></canvas>
+            </div>
+          </div>
         </div>
-        <div class="nes-select">
-          <select required id="default_select">
-            <option value="tobu.gb">Tobu Tobu Girl</option>
-            <option value="dino.gb">Dino's Offline Adventure</option>
-          </select>
+
+        <div class="table w-full mt-8">
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm rounded-s"
+            >
+              Cell 1
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Cell 2
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Cell 3
+            </div>
+          </div>
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-500 p-4 text-center text-gray-200"
+                >
+                  1
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-400 p-4 text-center text-gray-700"
+                >
+                  2
+                </div>
+              </div>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-500 p-4 text-center text-gray-200"
+                >
+                  1
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-400 p-4 text-center text-gray-700"
+                >
+                  2
+                </div>
+              </div>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-500 p-4 text-center text-gray-200"
+                >
+                  1
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-400 p-4 text-center text-gray-700"
+                >
+                  2
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <a
-      href="https://github.com/bokuweb/gopher-boy/"
-      target="_blank"
-      rel="noopener"
-      class="github-link"
-      ><p class="nes-balloon from-right">Fork me<br />on GitHub</p>
-      <i class="nes-octocat"></i>
-    </a>
-
     <script src="wasm_exec.js"></script>
     <script type="text/javascript">
       document.addEventListener(

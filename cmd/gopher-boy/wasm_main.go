@@ -4,6 +4,7 @@ package main
 
 import (
 	"errors"
+
 	// "image/color"
 	"log"
 	"syscall/js"
@@ -60,12 +61,16 @@ func newGB(this js.Value, args []js.Value) interface{} {
 		win.KeyUp(byte(args[0].Int()))
 		return nil
 	}))
+	// for Debuging
+	this.Set("getVRAM", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		d := vRAM.GetBuf()
+		return js.TypedArrayOf(d)
+	}))
 	return this
 }
 
 func main() {
 	w := js.Global()
-
 	w.Set("GB", js.FuncOf(newGB))
 	select {}
 }

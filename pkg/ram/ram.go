@@ -24,3 +24,8 @@ func (r *RAM) Read(addr types.Word) byte {
 func (r *RAM) Write(addr types.Word, data byte) {
 	r.data[addr] = data
 }
+
+// Debugging
+func (r *RAM) GetBuf() []byte {
+	return r.data
+}
