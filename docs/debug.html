@@ -51,11 +51,22 @@
         justify-content: center;
       }
 
-      .tiledata0 {
-        background: #fff;
+      .tiledata0, .timemap0-screen, .tilemap1-screen {
+        background: #aec5a0;
         width: 100%;
         height: auto;
+        vertical-align: middle;
       }
+
+      .tiledata {
+        min-width: 180px;
+        vertical-align: middle;
+      }
+
+      .tilemap0, .tilemap1 {
+        min-width: 256px;
+        vertical-align: middle;
+      }      
     </style>
   </head>
   <body>
@@ -107,44 +118,34 @@
             <div
               class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm rounded-s"
             >
-              A cell with more content
+              Tile Data
             </div>
             <div
               class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
             >
-              Cell 2
+              Tile Map0
             </div>
             <div
               class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
             >
-              Cell 3
-            </div>
-            <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
-            >
-              Cell 3
+              Tile Map1
             </div>
           </div>
           <div class="table-row">
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
             >
-              <canvas class="tiledata0" width="256" height="256"></canvas>
+              <canvas class="tiledata0" width="128"" height="192"></canvas>
             </div>
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
             >
-              <canvas class="tiledata0" width="256" height="256"></canvas>
+              <canvas class="tiledata0 tilemap0-screen" width="256" height="256"></canvas>
             </div>
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
             >
-              <canvas class="tiledata0" width="256" height="256"></canvas>
-            </div>
-            <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
-            >
-              <canvas class="tiledata0" width="256" height="256"></canvas>
+              <canvas class="tiledata0 tilemap1-screen" width="256" height="256"></canvas>
             </div>
           </div>
         </div>
@@ -231,6 +232,21 @@
         },
         false
       );
+
+      const getPalette = (c)  =>  {
+      	switch(c) {
+      	case 0:
+      		return [175, 197, 160, 255];
+      	case 1:
+      		return [93, 147, 66, 255];
+      	case 2:
+      		return [22, 63, 48, 255];
+      	case 3:
+      		return [0, 40, 0, 255];
+      	}
+      }
+
+
       window.onload = async () => {
         const go = new Go();
         const res = await fetch("./main.wasm");
@@ -242,7 +258,7 @@
         go.run(instance);
 
         const init = async buf => {
-          const canvas = document.querySelector("canvas");
+          const canvas = document.querySelector(".game");
           const input = document.querySelector("#file_upload");
           const elGb = document.querySelector(".gameboy");
           const selector = document.querySelector("select");
@@ -250,24 +266,140 @@
           const image = ctx.createImageData(160, 144);
 
           if (!buf) {
-            const rom = await fetch("./tobu.gb");
+            const rom = await fetch("./SML.gb");
             buf = await rom.arrayBuffer();
           }
           let gb = new GB(new Uint8Array(buf));
 
           document.querySelector(".led").style.background = "red";
 
+
+
+          const renderDebugInfo = () => {
+            const vram = gb.getVRAM();
+            const buildSprite = spriteNum => {
+              const sprite = Array.apply(null, Array(8)).map(_ => [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]);
+              for (let y = 0; y < 8; y++) {
+                for (let x = 0; x < 8; x++) {
+                  let v = 0;
+                  if (vram[spriteNum * 16 + y * 2] & (0x80 >> x)) {
+                      v += 1;
+                  }
+                  if (vram[spriteNum * 16 + y * 2 + 1] & (0x80 >> x)) {
+                      v += 2;
+                  }                  
+                  sprite[y][x] = v;
+                }
+              }
+              return sprite;
+            };
+
+            const tile = [];
+            const renderSprite = (sprite, spriteNum) => {
+              for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                  const c = getPalette(sprite[i][j]);
+                  const x = j + (spriteNum % 16) * 8;
+                  const y = i + ~~(spriteNum / 16) * 8;
+                  tile[(y * 256 + x) * 4] = c[0];
+                  tile[(y * 256 + x) * 4 + 1] = c[1];
+                  tile[(y * 256 + x) * 4 + 2] = c[2];
+                  tile[(y * 256 + x) * 4 + 3] = 255;
+                }
+              }
+            };
+
+            const tiles = [];
+            for (let i = 0; i < 384; i++) {
+              const sprite = buildSprite(i);
+              tiles.push(sprite)
+              renderSprite(sprite, i);
+            }
+            const tiledata = document.querySelector(".tiledata0");
+            const ctx = tiledata.getContext("2d");
+            const image = ctx.createImageData(256, 256);
+            image.data.set(tile);
+            ctx.putImageData(image, 0, 0);
+
+            const tileMap = []
+            for (let n = 0; n < 1024; n++) {
+              const tileId = vram[0x1C00 + n];
+              // const tileX = i % 32;
+              // const tileY = ~~(i / 32);
+              const sprite = tiles[tileId + 256];
+              if (!sprite) {
+                console.log(tileId, sprite)
+                continue;
+              }              
+              for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                  const c = getPalette(sprite[i][j]);
+                  const x = j + (n % 32) * 8;
+                  const y = i + ~~(n / 32) * 8;
+                  tileMap[(y * 256 + x) * 4] = c[0];
+                  tileMap[(y * 256 + x) * 4 + 1] = c[1];
+                  tileMap[(y * 256 + x) * 4 + 2] = c[2];
+                  tileMap[(y * 256 + x) * 4 + 3] = 255;
+                }
+              }
+            }
+            const tileMapEl = document.querySelector(".tilemap1-screen");
+            const tctx = tileMapEl.getContext("2d");
+            const timage = tctx.createImageData(256, 256);
+            timage.data.set(tileMap);
+            tctx.putImageData(timage, 0, 0);
+
+
+            const tileMap0 = []
+            for (let n = 0; n < 1024; n++) {
+              const tileId = vram[0x1800 + n];
+              // const tileX = i % 32;
+              // const tileY = ~~(i / 32);
+              const sprite = tiles[tileId + 256];
+              if (!sprite) {
+                console.log(tileId, sprite)
+                continue;
+              }
+              for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                  const c = getPalette(sprite[i][j]);
+                  const x = j + (n % 32) * 8;
+                  const y = i + ~~(n / 32) * 8;
+                  tileMap0[(y * 256 + x) * 4] = c[0];
+                  tileMap0[(y * 256 + x) * 4 + 1] = c[1];
+                  tileMap0[(y * 256 + x) * 4 + 2] = c[2];
+                  tileMap0[(y * 256 + x) * 4 + 3] = 255;
+                }
+              }
+            }
+            const tileMapEl0 = document.querySelector(".tilemap0-screen");
+            const tctx0 = tileMapEl0.getContext("2d");
+            const timage0 = tctx0.createImageData(256, 256);
+            timage0.data.set(tileMap0);
+            tctx0.putImageData(timage0, 0, 0);
+          };
+
           const frame = () => {
             if (!gb) return;
             const img = gb.next();
             image.data.set(img);
             ctx.putImageData(image, 0, 0);
-            console.log("aaa", gb.getVRAM());
+            renderDebugInfo();
             window.requestAnimationFrame(frame);
           };
           frame();
 
           const onKeydown = e => {
+            console.log(e.key)
             switch (e.key) {
               case "z":
                 return gb.keyDown(0x01);
@@ -330,31 +462,31 @@
             gb = null;
           };
 
-          const onFileChange = e => {
-            const files = e.target.files;
-            const file = files[0];
-            const reader = new FileReader();
-            cleanup();
-            reader.onload = e => {
-              init(e.currentTarget.result);
-            };
-            reader.readAsArrayBuffer(file);
-          };
+          // const onFileChange = e => {
+          //   const files = e.target.files;
+          //   const file = files[0];
+          //   const reader = new FileReader();
+          //   cleanup();
+          //   reader.onload = e => {
+          //     init(e.currentTarget.result);
+          //   };
+          //   reader.readAsArrayBuffer(file);
+          // };
 
-          const onROMChange = async e => {
-            cleanup();
-            const rom = await fetch(`./${e.target.value}`);
-            const buf = await rom.arrayBuffer();
-            init(buf);
-          };
+          // const onROMChange = async e => {
+          //   cleanup();
+          //   const rom = await fetch(`./${e.target.value}`);
+          //   const buf = await rom.arrayBuffer();
+          //   init(buf);
+          // };
 
-          input.addEventListener("change", onFileChange);
+          // input.addEventListener("change", onFileChange);
 
           window.addEventListener("keydown", onKeydown);
 
           window.addEventListener("keyup", onKeyup);
 
-          selector.addEventListener("change", onROMChange);
+          // selector.addEventListener("change", onROMChange);
 
           const addHandler = (classname, bit) => {
             const el = document.querySelector(`.${classname}`);

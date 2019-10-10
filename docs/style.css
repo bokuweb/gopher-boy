@@ -87,6 +87,7 @@ canvas.game {
   top: 22px;
   left: 48px;
 }
+
 .led {
   position: absolute;
   height: 8px;
