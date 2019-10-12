@@ -29,7 +29,6 @@
         min-width: 1280px;
         padding: 0;
         margin: 0;
-        overflow: hidden;
       }
 
       .container {
@@ -88,19 +87,7 @@
           <div class="buttonStart"></div>
           <div class="led"></div>
         </div>
-        <!--<button
-          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded items-center"
-        >
-          <svg
-            class="fill-current w-4 h-4 mr-2"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-          </svg>
-          <span>Download</span>
-        </button>
-         <div class="control">
+        <!-- <div class="control">
           <div>
             <label
               class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
@@ -153,14 +140,9 @@
         <div class="table w-full mt-8">
           <div class="table-row">
             <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm rounded-s"
-            >
-              Cell 1
-            </div>
-            <div
               class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
             >
-              Cell 2
+              GPU Register
             </div>
           </div>
           <div class="table-row">
@@ -169,412 +151,154 @@
             >
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-lcdc"
                 >
-                  1
+                  0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
-                >
-                  LCDC
-                </div>
-              </div>
-            </div>
-            <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
-            >
-              <div class="flex md:flex-row-reverse flex-wrap">
-                <div
-                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
-                >
-                  1
-                </div>
-                <div
-                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   LCDC
                 </div>
               </div>
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-stat"
                 >
-                  1
+                  0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   STAT
+                </div>
+              </div> 
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-scrolly"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  SCROLLY
+                </div>
+              </div> 
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-scrollx"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  SCROLLX
+                </div>
+              </div>  
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-ly"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  LY
+                </div>
+              </div>  
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-lyc"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  LYC
+                </div>
+              </div>
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-dma"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  DMA
+                </div>
+              </div>                                                                     
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-bgp"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  BGP
                 </div>
               </div>   
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-obp0"
                 >
-                  1
+                  0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
                 >
-                  SCROLLY
+                  OBP0
                 </div>
-              </div>  
-            <div class="flex md:flex-row-reverse flex-wrap">
+              </div>    
+              <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-obp1"
                 >
-                  1
+                  0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
                 >
-                  SCROLLX
+                  OBP1
                 </div>
-              </div>                                          
+              </div> 
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-wy"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  Wy
+                </div>
+              </div>                                                      
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-wx"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  WX
+                </div>
+              </div>                
             </div>
           </div>
         </div>
       </div>
     </div>
     <script src="wasm_exec.js"></script>
-    <script type="text/javascript">
-      document.addEventListener(
-        "touchmove",
-        function(event) {
-          if (event.scale !== 1) {
-            event.preventDefault();
-          }
-        },
-        false
-      );
-
-      const getPalette = (c)  =>  {
-      	switch(c) {
-      	case 0:
-      		return [175, 197, 160, 255];
-      	case 1:
-      		return [93, 147, 66, 255];
-      	case 2:
-      		return [22, 63, 48, 255];
-      	case 3:
-      		return [0, 40, 0, 255];
-      	}
-      }
-
-
-      window.onload = async () => {
-        const go = new Go();
-        const res = await fetch("./main.wasm");
-        const bytes = await res.arrayBuffer();
-        const { instance } = await WebAssembly.instantiate(
-          bytes,
-          go.importObject
-        );
-        go.run(instance);
-
-        const init = async buf => {
-          const canvas = document.querySelector(".game");
-          const input = document.querySelector("#file_upload");
-          const elGb = document.querySelector(".gameboy");
-          const selector = document.querySelector("select");
-          const ctx = canvas.getContext("2d");
-          const image = ctx.createImageData(160, 144);
-
-          if (!buf) {
-            const rom = await fetch("./tobu.gb");
-            buf = await rom.arrayBuffer();
-          }
-          let gb = new GB(new Uint8Array(buf));
-
-          document.querySelector(".led").style.background = "red";
-
-
-/*
-	LCDC types.Word = 0x00
-	STAT            = 0x01
-	SCROLLY = 0x02
-	SCROLLX = 0x03
-	LY  = 0x04
-	LYC = 0x05
-	DMA  = 0x06
-	BGP  = 0x07
-	OBP0 = 0x08
-	OBP1 = 0x09
-	WX   = 0x0B
-	WY   = 0x0A
-*/
-
-          const renderDebugInfo = () => {
-
-            const vram = gb.getVRAM();
-            const lcdc = gb.readGPU(0);
-            const stat = gb.readGPU(1);
-            const scrollY = gb.readGPU(2);
-            const scrollX = gb.readGPU(3);
-            const ly = gb.readGPU(4);
-            const lyc = gb.readGPU(5);
-            const dma = gb.readGPU(6);
-            const bgp = gb.readGPU(7);
-            const obp0 = gb.readGPU(8);
-            const obp1 = gb.readGPU(9);
-            const wy = gb.readGPU(10);
-            const wx = gb.readGPU(11);
-
-            const tileData0Selected =() => {
-            	return (lcdc&0x10) !== 0x10
-            }
-            const buildSprite = spriteNum => {
-              const sprite = Array.apply(null, Array(8)).map(_ => [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-              ]);
-              for (let y = 0; y < 8; y++) {
-                for (let x = 0; x < 8; x++) {
-                  let v = 0;
-                  if (vram[spriteNum * 16 + y * 2] & (0x80 >> x)) {
-                      v += 1;
-                  }
-                  if (vram[spriteNum * 16 + y * 2 + 1] & (0x80 >> x)) {
-                      v += 2;
-                  }                  
-                  sprite[y][x] = v;
-                }
-              }
-              return sprite;
-            };
-
-            const tile = [];
-            const renderSprite = (sprite, spriteNum) => {
-              for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                  const c = getPalette(sprite[i][j]);
-                  const x = j + (spriteNum % 16) * 8;
-                  const y = i + ~~(spriteNum / 16) * 8;
-                  tile[(y * 256 + x) * 4] = c[0];
-                  tile[(y * 256 + x) * 4 + 1] = c[1];
-                  tile[(y * 256 + x) * 4 + 2] = c[2];
-                  tile[(y * 256 + x) * 4 + 3] = 255;
-                }
-              }
-            };
-
-            const tiles = [];
-            for (let i = 0; i < 384; i++) {
-              const sprite = buildSprite(i);
-              tiles.push(sprite)
-              renderSprite(sprite, i);
-            }
-            const tiledata = document.querySelector(".tiledata0");
-            const ctx = tiledata.getContext("2d");
-            const image = ctx.createImageData(256, 256);
-            image.data.set(tile);
-            ctx.putImageData(image, 0, 0);
-
-            const tileMap = []
-            for (let n = 0; n < 1024; n++) {
-              const tileId = vram[0x1C00 + n];
-              // const tileX = i % 32;
-              let offset = tileId
-              if (tileData0Selected()) {
-               offset = ((tileId & 0x80 ? new Int8Array([tileId])[0] : (tileId & 0x7F))) + 256
-              }
-              const sprite = tiles[offset];
-              for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                  const c = getPalette(sprite[i][j]);
-                  const x = j + (n % 32) * 8;
-                  const y = i + ~~(n / 32) * 8;
-                  tileMap[(y * 256 + x) * 4] = c[0];
-                  tileMap[(y * 256 + x) * 4 + 1] = c[1];
-                  tileMap[(y * 256 + x) * 4 + 2] = c[2];
-                  tileMap[(y * 256 + x) * 4 + 3] = 255;
-                }
-              }
-            }
-            const tileMapEl = document.querySelector(".tilemap1-screen");
-            const tctx = tileMapEl.getContext("2d");
-            const timage = tctx.createImageData(256, 256);
-            timage.data.set(tileMap);
-            tctx.putImageData(timage, 0, 0);
-
-
-            const tileMap0 = []
-            for (let n = 0; n < 1024; n++) {
-              const tileId = vram[0x1800 + n];
-              let offset = tileId;
-              if (tileData0Selected()) {
-               offset = ((tileId & 0x80 ? new Int8Array([tileId])[0] : (tileId & 0x7F))) + 256
-              }
-              const sprite = tiles[offset];
-              for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                  const c = getPalette(sprite[i][j]);
-                  const x = j + (n % 32) * 8;
-                  const y = i + ~~(n / 32) * 8;
-                  tileMap0[(y * 256 + x) * 4] = c[0];
-                  tileMap0[(y * 256 + x) * 4 + 1] = c[1];
-                  tileMap0[(y * 256 + x) * 4 + 2] = c[2];
-                  tileMap0[(y * 256 + x) * 4 + 3] = 255;
-                }
-              }
-            }
-            const tileMapEl0 = document.querySelector(".tilemap0-screen");
-            const tctx0 = tileMapEl0.getContext("2d");
-            const timage0 = tctx0.createImageData(256, 256);
-            timage0.data.set(tileMap0);
-            tctx0.putImageData(timage0, 0, 0);
-          };
-
-          const frame = () => {
-            if (!gb) return;
-            const img = gb.next();
-            image.data.set(img);
-            ctx.putImageData(image, 0, 0);
-
-
-
-            renderDebugInfo();
-            window.requestAnimationFrame(frame);
-          };
-          frame();
-
-          const onKeydown = e => {
-            console.log(e.key)
-            switch (e.key) {
-              case "z":
-                return gb.keyDown(0x01);
-              case "x":
-                return gb.keyDown(0x02);
-              case "Backspace":
-                return gb.keyDown(0x04);
-              case "Enter":
-                return gb.keyDown(0x08);
-              case "ArrowLeft":
-                return gb.keyDown(0x20);
-              case "ArrowUp":
-                return gb.keyDown(0x40);
-              case "ArrowRight":
-                return gb.keyDown(0x10);
-              case "ArrowDown":
-                return gb.keyDown(0x80);
-            }
-          };
-
-          const onKeyup = e => {
-            switch (e.key) {
-              case "z":
-                return gb.keyUp(0x01);
-              case "x":
-                return gb.keyUp(0x02);
-              case "Backspace":
-                return gb.keyUp(0x04);
-              case "Enter":
-                return gb.keyUp(0x08);
-              case "ArrowLeft":
-                return gb.keyUp(0x20);
-              case "ArrowUp":
-                return gb.keyUp(0x40);
-              case "ArrowRight":
-                return gb.keyUp(0x10);
-              case "ArrowDown":
-                return gb.keyUp(0x80);
-            }
-          };
-
-          const removeHandler = classname => {
-            const el = document.querySelector(`.${classname}`);
-            const elClone = el.cloneNode(true);
-            el.parentNode.replaceChild(elClone, el);
-          };
-
-          const cleanup = () => {
-            input.removeEventListener("change", onFileChange);
-            window.removeEventListener("keydown", onKeydown);
-            window.removeEventListener("keyup", onKeyup);
-            removeHandler("buttonA");
-            removeHandler("buttonB");
-            removeHandler("buttonSelect");
-            removeHandler("buttonStart");
-            removeHandler("right");
-            removeHandler("left");
-            removeHandler("up");
-            removeHandler("down");
-            gb = null;
-          };
-
-          // const onFileChange = e => {
-          //   const files = e.target.files;
-          //   const file = files[0];
-          //   const reader = new FileReader();
-          //   cleanup();
-          //   reader.onload = e => {
-          //     init(e.currentTarget.result);
-          //   };
-          //   reader.readAsArrayBuffer(file);
-          // };
-
-          // const onROMChange = async e => {
-          //   cleanup();
-          //   const rom = await fetch(`./${e.target.value}`);
-          //   const buf = await rom.arrayBuffer();
-          //   init(buf);
-          // };
-
-          // input.addEventListener("change", onFileChange);
-
-          window.addEventListener("keydown", onKeydown);
-
-          window.addEventListener("keyup", onKeyup);
-
-          // selector.addEventListener("change", onROMChange);
-
-          const addHandler = (classname, bit) => {
-            const el = document.querySelector(`.${classname}`);
-            el.addEventListener("mousedown", e => {
-              return gb.keyDown(bit);
-            });
-            el.addEventListener(
-              "touchstart",
-              e => {
-                e.preventDefault();
-                navigator.vibrate && navigator.vibrate(30);
-                return gb.keyDown(bit);
-              },
-              true
-            );
-
-            el.addEventListener("mouseup", e => {
-              return gb.keyUp(bit);
-            });
-            el.addEventListener(
-              "touchend",
-              e => {
-                e.preventDefault();
-                return gb.keyUp(bit);
-              },
-              true
-            );
-          };
-
-          addHandler("buttonA", 0x01);
-          addHandler("buttonB", 0x02);
-          addHandler("buttonSelect", 0x04);
-          addHandler("buttonStart", 0x08);
-
-          addHandler("right", 0x10);
-          addHandler("left", 0x20);
-          addHandler("up", 0x40);
-          addHandler("down", 0x80);
-        };
-
-        init();
-      };
-    </script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>
