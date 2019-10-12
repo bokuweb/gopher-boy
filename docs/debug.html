@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gopher Boy</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+      name="viewport"
+    />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link href="./style.css" rel="stylesheet" />
+    <style>
+      * {
+        touch-action: manipulation;
+      }
+
+      html {
+        height: 100%;
+      }
+      body {
+        background: #1a202c;
+        display: flex;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        min-width: 1280px;
+        padding: 0;
+        margin: 0;
+      }
+
+      .container {
+        height: 100%;
+        display: flex;
+      }
+
+      .player {
+        max-width: 360px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .debugger {
+        padding: 48px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .tiledata0, .timemap0-screen, .tilemap1-screen {
+        background: #aec5a0;
+        width: 100%;
+        height: auto;
+        vertical-align: middle;
+      }
+
+      .tiledata {
+        min-width: 180px;
+        vertical-align: middle;
+      }
+
+      .tilemap0, .tilemap1 {
+        min-width: 256px;
+        vertical-align: middle;
+      }      
+    </style>
+  </head>
+  <body>
+    <div class="container w-full">
+      <div class="flex flex-col player">
+        <div class="gameboy">
+          <div class="screen">
+            <canvas class="game" width="160" height="144"></canvas>
+          </div>
+          <div class="pad"></div>
+          <div class="right"></div>
+          <div class="down"></div>
+          <div class="up"></div>
+          <div class="left"></div>
+          <div class="hole"></div>
+          <div class="buttonB"></div>
+          <div class="buttonA"></div>
+          <div class="buttonSelect"></div>
+          <div class="buttonStart"></div>
+          <div class="led"></div>
+        </div>
+        <!-- <div class="control">
+          <div>
+            <label
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+              for="file_upload"
+            >
+              Load
+              <input type="file" class="file" id="file_upload" />
+            </label>
+          </div>
+        </div> -->
+      </div>
+      <div class="debugger">
+        <div class="table w-full">
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm rounded-s"
+            >
+              Tile Data
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Tile Map0
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              Tile Map1
+            </div>
+          </div>
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
+            >
+              <canvas class="tiledata0" width="128"" height="192"></canvas>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
+            >
+              <canvas class="tiledata0 tilemap0-screen" width="256" height="256"></canvas>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
+            >
+              <canvas class="tiledata0 tilemap1-screen" width="256" height="256"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="table w-full mt-8">
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              GPU Register
+            </div>
+          </div>
+          <div class="table-row">
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+            >
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-lcdc"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  LCDC
+                </div>
+              </div>
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-stat"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  STAT
+                </div>
+              </div> 
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-scrolly"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  SCROLLY
+                </div>
+              </div> 
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-scrollx"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  SCROLLX
+                </div>
+              </div>  
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-ly"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  LY
+                </div>
+              </div>  
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-lyc"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  LYC
+                </div>
+              </div>
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-dma"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  DMA
+                </div>
+              </div>                                                                     
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-bgp"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  BGP
+                </div>
+              </div>   
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-obp0"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  OBP0
+                </div>
+              </div>    
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-obp1"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  OBP1
+                </div>
+              </div> 
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-wy"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  Wy
+                </div>
+              </div>                                                      
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-wx"
+                >
+                  0x00
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                >
+                  WX
+                </div>
+              </div>                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="wasm_exec.js"></script>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>
