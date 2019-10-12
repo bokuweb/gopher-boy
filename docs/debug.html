@@ -162,11 +162,6 @@
             >
               Cell 2
             </div>
-            <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
-            >
-              Cell 3
-            </div>
           </div>
           <div class="table-row">
             <div
@@ -174,14 +169,14 @@
             >
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-4 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
                 >
                   1
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-4 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
                 >
-                  2
+                  LCDC
                 </div>
               </div>
             </div>
@@ -190,32 +185,52 @@
             >
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-4 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
                 >
                   1
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-4 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
                 >
-                  2
+                  LCDC
                 </div>
               </div>
-            </div>
-            <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
-            >
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-500 p-4 text-center text-gray-200"
+                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
                 >
                   1
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-400 p-4 text-center text-gray-700"
+                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
                 >
-                  2
+                  STAT
                 </div>
-              </div>
+              </div>   
+              <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
+                >
+                  1
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
+                >
+                  SCROLLY
+                </div>
+              </div>  
+            <div class="flex md:flex-row-reverse flex-wrap">
+                <div
+                  class="w-full md:w-3/4 bg-gray-500 p-1 text-center text-gray-200"
+                >
+                  1
+                </div>
+                <div
+                  class="w-full md:w-1/4 bg-gray-400 p-1 text-center text-gray-700"
+                >
+                  SCROLLX
+                </div>
+              </div>                                          
             </div>
           </div>
         </div>
@@ -266,7 +281,7 @@
           const image = ctx.createImageData(160, 144);
 
           if (!buf) {
-            const rom = await fetch("./SML.gb");
+            const rom = await fetch("./tobu.gb");
             buf = await rom.arrayBuffer();
           }
           let gb = new GB(new Uint8Array(buf));
@@ -274,9 +289,40 @@
           document.querySelector(".led").style.background = "red";
 
 
+/*
+	LCDC types.Word = 0x00
+	STAT            = 0x01
+	SCROLLY = 0x02
+	SCROLLX = 0x03
+	LY  = 0x04
+	LYC = 0x05
+	DMA  = 0x06
+	BGP  = 0x07
+	OBP0 = 0x08
+	OBP1 = 0x09
+	WX   = 0x0B
+	WY   = 0x0A
+*/
 
           const renderDebugInfo = () => {
+
             const vram = gb.getVRAM();
+            const lcdc = gb.readGPU(0);
+            const stat = gb.readGPU(1);
+            const scrollY = gb.readGPU(2);
+            const scrollX = gb.readGPU(3);
+            const ly = gb.readGPU(4);
+            const lyc = gb.readGPU(5);
+            const dma = gb.readGPU(6);
+            const bgp = gb.readGPU(7);
+            const obp0 = gb.readGPU(8);
+            const obp1 = gb.readGPU(9);
+            const wy = gb.readGPU(10);
+            const wx = gb.readGPU(11);
+
+            const tileData0Selected =() => {
+            	return (lcdc&0x10) !== 0x10
+            }
             const buildSprite = spriteNum => {
               const sprite = Array.apply(null, Array(8)).map(_ => [
                 0,
@@ -334,12 +380,11 @@
             for (let n = 0; n < 1024; n++) {
               const tileId = vram[0x1C00 + n];
               // const tileX = i % 32;
-              // const tileY = ~~(i / 32);
-              const sprite = tiles[tileId + 256];
-              if (!sprite) {
-                console.log(tileId, sprite)
-                continue;
-              }              
+              let offset = tileId
+              if (tileData0Selected()) {
+               offset = ((tileId & 0x80 ? new Int8Array([tileId])[0] : (tileId & 0x7F))) + 256
+              }
+              const sprite = tiles[offset];
               for (let i = 0; i < 8; i++) {
                 for (let j = 0; j < 8; j++) {
                   const c = getPalette(sprite[i][j]);
@@ -362,13 +407,11 @@
             const tileMap0 = []
             for (let n = 0; n < 1024; n++) {
               const tileId = vram[0x1800 + n];
-              // const tileX = i % 32;
-              // const tileY = ~~(i / 32);
-              const sprite = tiles[tileId + 256];
-              if (!sprite) {
-                console.log(tileId, sprite)
-                continue;
+              let offset = tileId;
+              if (tileData0Selected()) {
+               offset = ((tileId & 0x80 ? new Int8Array([tileId])[0] : (tileId & 0x7F))) + 256
               }
+              const sprite = tiles[offset];
               for (let i = 0; i < 8; i++) {
                 for (let j = 0; j < 8; j++) {
                   const c = getPalette(sprite[i][j]);
@@ -393,6 +436,9 @@
             const img = gb.next();
             image.data.set(img);
             ctx.putImageData(image, 0, 0);
+
+
+
             renderDebugInfo();
             window.requestAnimationFrame(frame);
           };
