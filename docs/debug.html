@@ -50,7 +50,7 @@
         justify-content: center;
       }
 
-      .tiledata0, .timemap0-screen, .tilemap1-screen {
+      .tiledata0, .timemap0-screen, .tilemap1-screen, .sprites, .window {
         background: #aec5a0;
         width: 100%;
         height: auto;
@@ -65,6 +65,15 @@
       .tilemap0, .tilemap1 {
         min-width: 256px;
         vertical-align: middle;
+      }      
+
+      .spritedata {
+        min-width: 160px;
+        vertical-align: middle;
+      }
+
+      .register {
+        min-width: 190px;        
       }      
     </style>
   </head>
@@ -103,34 +112,34 @@
         <div class="table w-full">
           <div class="table-row">
             <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm rounded-s"
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-xs rounded-s"
             >
               Tile Data
             </div>
             <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-xs rounded-s"
             >
               Tile Map0
             </div>
             <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-xs rounded-s"
             >
               Tile Map1
             </div>
           </div>
           <div class="table-row">
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-xs rounded-s tiledata"
             >
               <canvas class="tiledata0" width="128"" height="192"></canvas>
             </div>
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-xs rounded-s tiledata"
             >
               <canvas class="tiledata0 tilemap0-screen" width="256" height="256"></canvas>
             </div>
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s tiledata"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-xs rounded-s tiledata"
             >
               <canvas class="tiledata0 tilemap1-screen" width="256" height="256"></canvas>
             </div>
@@ -140,155 +149,175 @@
         <div class="table w-full mt-8">
           <div class="table-row">
             <div
-              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-xs rounded-s"
+            >
+              Sprite
+            </div>
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-xs rounded-s"
+            >
+              Window
+            </div>            
+            <div
+              class="table-cell bg-gray-800 text-gray-400 px-4 py-2 text-xs rounded-s register"
             >
               GPU Register
-            </div>
+            </div>            
           </div>
           <div class="table-row">
             <div
-              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-sm  rounded-s"
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-xs rounded-s spritedata"
+            >
+              <canvas class="sprites" width="160" height="144"></canvas>
+            </div>
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-xs rounded-s spritedata"
+            >
+              <canvas class="window" width="160" height="144"></canvas>
+            </div>            
+            <div
+              class="table-cell bg-gray-700 text-gray-400 px-4 py-2 text-xs rounded-s"
             >
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-lcdc"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-lcdc"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   LCDC
                 </div>
               </div>
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-stat"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-stat"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   STAT
                 </div>
               </div> 
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-scrolly"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-scrolly"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   SCROLLY
                 </div>
               </div> 
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-scrollx"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-scrollx"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   SCROLLX
                 </div>
               </div>  
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-ly"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-ly"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   LY
                 </div>
               </div>  
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-lyc"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-lyc"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   LYC
                 </div>
               </div>
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-dma"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-dma"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   DMA
                 </div>
               </div>                                                                     
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-bgp"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-bgp"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   BGP
                 </div>
               </div>   
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-obp0"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-obp0"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   OBP0
                 </div>
               </div>    
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-obp1"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-obp1"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   OBP1
                 </div>
               </div> 
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-wy"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-wy"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   Wy
                 </div>
               </div>                                                      
               <div class="flex md:flex-row-reverse flex-wrap">
                 <div
-                  class="w-full md:w-3/4 bg-gray-600 p-1 text-center text-gray-200 gpu-wx"
+                  class="w-full md:w-1/2 bg-gray-600 p-1 text-center text-gray-200 gpu-wx"
                 >
                   0x00
                 </div>
                 <div
-                  class="w-full md:w-1/4 bg-gray-800 p-1 text-center text-gray-200"
+                  class="w-full md:w-1/2 bg-gray-800 p-1 text-center text-gray-200"
                 >
                   WX
                 </div>
