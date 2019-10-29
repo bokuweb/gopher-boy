@@ -107,11 +107,7 @@ func (cpu *CPU) Step() Cycle {
 
 func (cpu *CPU) fetchOperands(size uint) []byte {
 	operands := []byte{}
-	switch size {
-	case 1:
-		operands = append(operands, cpu.fetch())
-	case 2:
-		operands = append(operands, cpu.fetch())
+	for i := 0; i < int(size); i++ {
 		operands = append(operands, cpu.fetch())
 	}
 	return operands
