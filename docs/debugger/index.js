@@ -190,8 +190,10 @@ const renderTileData = imageData => {
 };
 
 export const renderDebugInfo = gb => {
-  const vram = gb.getVRAM();
-  const oamram = gb.getOAMRAM();
+  let vram = new Uint8Array(0x2000 * 4);
+  let oamram = new Uint8Array(0x800 * 4);
+  gb.getVRAM(vram);
+  gb.getOAMRAM(oamram);
 
   const lcdc = gb.readGPU(0);
   const stat = gb.readGPU(1);

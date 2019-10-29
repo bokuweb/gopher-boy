@@ -94,13 +94,12 @@
       );
       window.onload = async () => {
         const go = new Go();
-        const res = await fetch("./main.wasm");
-        const bytes = await res.arrayBuffer();
-        const { instance } = await WebAssembly.instantiate(
-          bytes,
+        await WebAssembly.instantiateStreaming(
+          fetch("./main.wasm"),
           go.importObject
-        );
-        go.run(instance);
+        ).then(result => {
+          go.run(result.instance);
+        });
 
         const init = async buf => {
           const canvas = document.querySelector("canvas");
@@ -115,13 +114,12 @@
             buf = await rom.arrayBuffer();
           }
           let gb = new GB(new Uint8Array(buf));
-
           document.querySelector(".led").style.background = "red";
+          // let img = new Uint8Array(160 * 144 * 4);
 
           const frame = () => {
             if (!gb) return;
-            const img = gb.next();
-            image.data.set(img);
+            gb.next(image.data);
             ctx.putImageData(image, 0, 0);
             window.requestAnimationFrame(frame);
           };
