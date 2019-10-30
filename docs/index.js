@@ -36,8 +36,7 @@ window.onload = async () => {
 
     const frame = () => {
       if (!gb) return;
-      const img = gb.next();
-      image.data.set(img);
+      gb.next(image.data);
       ctx.putImageData(image, 0, 0);
       renderDebugInfo(gb);
       window.requestAnimationFrame(frame);

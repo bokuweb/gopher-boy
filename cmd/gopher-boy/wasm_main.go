@@ -52,7 +52,7 @@ func newGB(this js.Value, args []js.Value) interface{} {
 
 	this.Set("next", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		img := emu.Next()
-		return js.TypedArrayOf(img)
+		return js.CopyBytesToJS(args[0], img)
 	}))
 	this.Set("keyDown", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		win.KeyDown(byte(args[0].Int()))
@@ -65,11 +65,11 @@ func newGB(this js.Value, args []js.Value) interface{} {
 	// for Debuging
 	this.Set("getVRAM", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		d := vRAM.GetBuf()
-		return js.TypedArrayOf(d)
+		return js.CopyBytesToJS(args[0], d)
 	}))
 	this.Set("getOAMRAM", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		d := oamRAM.GetBuf()
-		return js.TypedArrayOf(d)
+		return js.CopyBytesToJS(args[0], d)
 	}))
 	this.Set("readGPU", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		return gpu.Read(types.Word(args[0].Int()))
